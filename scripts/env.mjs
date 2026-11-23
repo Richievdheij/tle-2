@@ -18,6 +18,7 @@ import { chmodSync, readFileSync, writeFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { readEnvFile, render, unquote } from './lib/dotenv.mjs'
 import { pass, fail } from './lib/check.mjs'
+import { php, site } from './lib/site.mjs'
 
 /**
  * Random values. Development generates them; production refuses to invent them.
@@ -55,12 +56,21 @@ export const DERIVED = {
     // unconditionally derived value would silently put it back to
     // http://localhost:8000 on every `make env`, breaking their site and
     // contradicting this file's own promise that nothing anyone typed is lost.
-    const current = unquote(values.APP_URL ?? '')
+    //
+    // When Herd serves the folder, the calculation answers Herd's URL instead:
+    // that is where the site actually is, and mails, redirects and asset URLs
+    // built from a localhost APP_URL would point at a server nobody runs. The
+    // same URL with the other scheme is recomputed too, so `herd secure` after
+    // the fact moves APP_URL from http to https rather than leaving it behind.
+    const current = unquote(values.APP_URL ?? '').replace(/\/+$/, '')
+    const herd = ctx.site?.servedBy === 'herd' ? ctx.site.url : null
     const isDefaultShape =
-      current === '' || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?$/.test(current)
-    if (!isDefaultShape) return undefined
+      current === '' || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(current)
+    const isHerdShape =
+      herd !== null && current.replace(/^https?:/, '') === herd.replace(/^https?:/, '')
+    if (!isDefaultShape && !isHerdShape) return undefined
 
-    return `http://localhost:${unquote(values.APP_PORT || '') || 8000}`
+    return herd ?? `http://localhost:${unquote(values.APP_PORT || '') || 8000}`
   },
 }
 
@@ -89,6 +99,8 @@ const group = (reason, keys) => Object.fromEntries(keys.map((key) => [key, reaso
 
 export const RUNTIME_ONLY = {
   HOME: "Set by the operating system, not by us. Read only when `php artisan dev` starts, to find Herd's configuration.",
+  USERPROFILE:
+    'Set by Windows, which has no HOME. The fallback for HOME when `php artisan dev` looks for Herd.',
   ...group('AWS/S3 is not a configured disk or queue in this template.', [
     'AWS_ACCESS_KEY_ID',
     'AWS_SECRET_ACCESS_KEY',
@@ -177,7 +189,7 @@ function undeclaredPorts(values) {
 function generateApplicationKey(env) {
   if (env !== 'local') return false
   try {
-    execFileSync('php', ['artisan', 'key:generate', '--no-interaction'], { stdio: 'pipe' })
+    execFileSync(php, ['artisan', 'key:generate', '--no-interaction'], { stdio: 'pipe' })
     // Confirmed by reading the file back, not inferred from a zero exit status.
     // artisan can exit 0 having written nothing, and stdio:'pipe' swallows the
     // diagnostic — so the summary would report "APP_KEY generated" over an empty
@@ -221,8 +233,9 @@ export function converge(env) {
   // another — APP_URL is exactly that — so production would accept it empty and
   // boot with no application URL. The predicate has to be fail-closed per run.
   const wasDerived = new Set()
+  const ctx = { env, site: env === 'local' ? site(target) : null }
   for (const [key, derive] of Object.entries(DERIVED)) {
-    const value = derive(resolved, { env })
+    const value = derive(resolved, ctx)
     if (value !== undefined) {
       resolved[key] = value
       wasDerived.add(key)

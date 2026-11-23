@@ -13,6 +13,8 @@ same targets one per step.
 | ------------------ | ---------------------------------------- |
 | Set up a clone     | `make install`                           |
 | Run it             | `make dev` · `make status` · `make stop` |
+| After a pull       | `make update` (the git hooks run it)     |
+| Serve through Herd | `make herd` (`make install` runs it)     |
 | Find the site URL  | `make status` — the `site` line          |
 | Check your work    | `make verify` (about 7 seconds)          |
 | Fix formatting     | `make format`                            |

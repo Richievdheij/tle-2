@@ -79,8 +79,8 @@ err = printf "\033[1;31m✗\033[0m %s\n"
 # *directory* and make quietly does nothing — a green run that ran nothing. In a
 # Laravel repo `test build config database routes public storage` are all real
 # directories, so this list is load-bearing rather than tidy.
-.PHONY: help install env git-hooks status \
-        dev stop fresh migrate seed migration erd \
+.PHONY: help install env herd git-hooks status \
+        dev stop update fresh migrate seed migration erd \
         format format-check lint analyse arch checks rector rector-check \
         test test-one coverage integration browser build clean \
         verify ci audit secrets-scan commit-messages
@@ -116,31 +116,39 @@ help: ## Show this help
 # assets from public/hot while Vite runs and from public/build otherwise, so
 # without a build every page is a ViteManifestNotFoundException.
 #
+# Locally the steps are `composer run setup` in composer.json — the one list, so
+# that somebody without make (Windows) runs exactly what `make install` runs.
+# Herd is linked before the env file is converged so that, once Herd serves the
+# folder, APP_URL is derived as https://<folder>.test rather than localhost.
+#
 # Every step is safe to repeat: touch leaves an existing file alone, migrate skips
-# what has run, and the seeder only creates what is absent.
+# what has run, the seeder only creates what is absent, and a folder Herd already
+# serves is not linked again.
 #
 # The touch mirrors the default in config/database.php. It is explicit because
 # artisan only creates a missing SQLite file when prompted or under --force, and
 # --force also waives production's confirmation. The database steps are local
 # only: a production schema changes through a deliberate `make migrate`.
 install: git-hooks ## Install everything a fresh clone needs — and say which URL to open
+ifeq ($(ENV),local)
+	@composer run setup
+else
 	@$(log) "Installing PHP dependencies…"
 	@composer install --no-interaction --prefer-dist
 	@$(log) "Installing frontend dependencies…"
 	@npm ci
 	@$(MAKE) --no-print-directory env
-ifeq ($(ENV),local)
-	@$(log) "Preparing the database…"
-	@$(LOAD_ENV) [ "$${DB_CONNECTION:-sqlite}" != sqlite ] || touch "$${DB_SQLITE_DATABASE:-database/database.sqlite}"
-	@$(LOAD_ENV) php artisan migrate --seed --no-interaction
-endif
 	@$(log) "Building the frontend assets…"
 	@npm run build
-	@$(ok) "Installed — 'make dev' adds live Vite, the queue and the logs"
-	@node scripts/site.mjs
+	@$(ok) "Installed"
+endif
 
 env: ## Create or converge the environment file — make env [ENV=production]
 	@node scripts/env.mjs $(ENV)
+
+# Local only, and never fatal: without Herd, `make dev` serves the site instead.
+herd: ## Let Herd serve this folder at https://<folder>.test — make install does this for you
+	@node scripts/herd.mjs
 
 git-hooks: ## Point git at .githooks and load the commit template
 	@git config core.hooksPath .githooks
@@ -179,7 +187,14 @@ dev: $(ENV_GUARD) ## Live Vite, queue and logs — plus artisan serve when Herd 
 stop: ## End this folder's make dev session and free the project's ports
 	@node scripts/ports.mjs --kill
 
-migrate: $(ENV_GUARD) ## Run pending migrations — after pulling one; neither dev nor Herd ever migrates
+# What a pull or a branch switch changes, brought up to date, so the site Herd
+# serves without `make dev` shows the new styling and schema rather than the old.
+# scripts/update.mjs says how it stays cheap; it is Node so that the git hooks and
+# `composer run refresh` run the same thing on Windows, where there is no make.
+update: $(ENV_GUARD) ## Bring dependencies, database and assets up to date — after a pull; the git hooks run it
+	@$(LOAD_ENV) node scripts/update.mjs
+
+migrate: $(ENV_GUARD) ## Run pending migrations — make update does this after a pull; dev and Herd never migrate
 	@$(LOAD_ENV) php artisan migrate
 
 seed: $(ENV_GUARD) ## Seed the database

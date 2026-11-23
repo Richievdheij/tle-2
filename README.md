@@ -4,74 +4,85 @@ A Laravel 13 starter template with one front door, one gate list, and a checked
 environment contract. Built so that after the first afternoon nobody has to think
 about the toolchain again.
 
-## Three commands
+## Getting started
+
+Everything works with the plain Laravel commands (`composer`, `php artisan`,
+`npm`), on macOS, Linux and Windows. The `make` targets run exactly the same
+thing and are optional.
+
+### First time
 
 ```bash
-git clone <this repository> && cd laravel-starter-template
-make install
-make dev
+git clone <this repository>
+cd <folder>
+composer run setup        # or: make install
 ```
 
-`make install` is the one-time bootstrap: both dependency trees, the git hooks, a
-`.env` with a generated application key, a migrated and seeded SQLite database,
-and a first asset build. Running it again is safe. It ends by printing the URL
-to open.
+That one command installs the PHP and frontend dependencies, creates `.env` with
+an application key, lets Herd serve the folder, migrates and seeds the SQLite
+database, builds the CSS and JavaScript, and arms the git hooks. It ends by
+printing the URL to open. Running it again is safe.
 
-`make dev` is for active frontend work: it runs Vite with live reload (plus the
-queue listener and the log tail) and never touches the database. It, too, starts
-by printing the URL. Leave it running in one terminal; Ctrl-C or `make stop`
-ends it.
+### Opening the site
 
-## Opening the site
+**With Laravel Herd** (macOS or Windows), clone the repository anywhere under
+Herd's folder (`~/Herd` or `C:\Users\<you>\Herd`, at any depth). `composer run setup`
+links it, so the site is at `https://<folder>.test` straight away and stays up.
+There is nothing to start and nothing to keep running. The styling is there
+too, because Herd serves the built assets.
 
-`make status` shows the URL on its `site` line at any time. Which URL depends on
-whether Herd serves the folder:
+**Without Herd**, run `composer run dev` (or `make dev`) and open
+`http://localhost:8000`.
 
-| Situation                                  | Open                    | Runs without `make dev`?  |
-| ------------------------------------------ | ----------------------- | ------------------------- |
-| Herd serves the folder (linked or parked)  | `https://<folder>.test` | Yes, with built assets    |
-| No Herd, or Herd does not serve the folder | `http://localhost:8000` | No — `make dev` serves it |
+`make status` shows the URL and what is running at any time.
 
-**Herd serves a folder only when it is linked, or sits _directly_ inside a parked
-directory.** `~/Herd/my-app` is served; `~/Herd/development/my-app` is not, and
-`https://my-app.test` then answers Herd's "Site not found". Link it once, from
-inside the folder:
+### Everyday commands
 
-```bash
-herd link --secure my-app     # serves this folder at https://my-app.test
-```
+| What                                    | Laravel                                        | make                          |
+| --------------------------------------- | ---------------------------------------------- | ----------------------------- |
+| Open the site (Herd)                    | nothing to run, open `https://<folder>.test`   |                               |
+| Live reload while editing SCSS/JS/Blade | `composer run dev`                             | `make dev`                    |
+| Run the tests                           | `composer test`                                | `make test`                   |
+| Run one test                            | `php artisan test --filter=<name>`             | `make test-one filter=<name>` |
+| After a `git pull` or a branch switch   | automatic; by hand `composer run refresh`      | `make update`                 |
+| Run new migrations                      | `php artisan migrate`                          | `make migrate`                |
+| Start the database over                 | `php artisan migrate:fresh --seed`             | `make fresh yes=1`            |
+| Build the CSS and JavaScript            | `npm run build`                                | `make build`                  |
+| Fix formatting                          | `vendor/bin/pint` and `npx prettier --write .` | `make format`                 |
+| Every check CI runs, before pushing     |                                                | `make verify`                 |
 
-Then set `APP_URL=https://my-app.test` in `.env` so links in mails point at the
-site — `make dev` warns while the two differ.
+**You never need `npm run dev` to see the styling.** It is only for live reload
+while you edit: `composer run dev` runs Vite, the queue listener and the log tail
+together (plus `php artisan serve` when Herd does not serve the folder). Stop it
+with Ctrl-C and the pages fall back to the built assets.
 
-Under Herd there is deliberately no `localhost` address: Herd is the server, and
-`make dev` adds only Vite, whose port (`5173`) is not a page to open. While it
-runs, Herd's pages load the live assets; stop it and they fall back to the built
-ones.
+**After a pull nothing needs remembering.** The `post-merge`, `post-checkout` and
+`post-rewrite` git hooks run `composer run refresh` for you: they install changed
+dependencies, run new migrations and rebuild the assets, in about a second when
+nothing changed.
 
-Run one `make dev` per project. A second would fail on Vite's port and, on its
-way out, switch off live reload for the first — so `make dev` refuses and says
-which process holds the port.
+### When something looks wrong
 
-Closing the terminal does not end `make dev`: its queue listener and log tail run
-on in the background. `make status` shows a running session on its `make dev`
-line, and `make stop` ends all of it — Vite, the queue listener, the log tail and
-`artisan serve` — for this folder only.
+| Symptom                                       | Fix                                                                                     |
+| --------------------------------------------- | --------------------------------------------------------------------------------------- |
+| The page has no styling                       | `composer run refresh`: rebuilds, and removes the hot file a crashed Vite leaves behind |
+| `https://<folder>.test` says "Site not found" | `composer run setup`, or `herd link --secure` in the folder                             |
+| An error about a missing table or column      | `php artisan migrate`                                                                   |
+| Mails or links point at the wrong URL         | `composer run setup` sets `APP_URL` to the Herd URL                                     |
 
-| After you pull…            | Run                                      |
-| -------------------------- | ---------------------------------------- |
-| a migration                | `make migrate`                           |
-| SCSS or JavaScript changes | `make build`, or keep `make dev` running |
+### Herd in more detail
 
-Then, before you push:
+Herd serves a folder when it is linked, or when it sits _directly_ inside a parked
+directory. `~/Herd/my-app` is served; `~/Herd/development/my-app` is not until it
+is linked, and setup (or `make herd`) does that with `herd link --secure`.
+Setup does not link over a site name another folder already uses. In that case it
+says which folder, and you pick a different name with
+`herd link --secure <other-name>`.
 
-```bash
-make verify
-```
-
-Run `make` on its own for the full list of targets. Every failure names the
-command that fixes it, and `make format` clears most formatting failures on its
-own.
+Run one `composer run dev` per project. A second would fail on Vite's port and, on
+its way out, switch off live reload for the first, so it refuses and says
+which process holds the port. `make stop` ends a session's Vite, queue listener,
+log tail and `artisan serve` for this folder only.
 
 ## Where you work
 
@@ -97,23 +108,24 @@ The full model, including hotfixes and how two people share one branch, is in
 | Composer | 2.x     |                                                            |
 | Node     | 24      | The version is in [.nvmrc](.nvmrc)                         |
 | npm      | 11+     |                                                            |
-| make     | 3.81+   | macOS ships this; on Windows use WSL2, see below           |
+| make     | 3.81+   | Optional. macOS ships it; on Windows see below             |
 
-**Windows: use WSL2.** Install it once with `wsl --install`, then clone and work
-inside it. Everything on this page then applies unchanged, because WSL2 _is_
-Linux.
+**Windows.** The Laravel commands above work natively, with Herd for Windows or
+any PHP 8.4. Only `make` needs WSL2 (`wsl --install`, then clone inside it).
+Without make, the pre-push hook says that `make verify` did not run and lets the
+push through. CI runs the same checks either way.
 
 Git Bash with `choco install make` does not work, and it fails in a way worth
 knowing about: the native Windows make spawns `cmd.exe` for every recipe line and
 silently ignores a POSIX shell it cannot resolve, so `vendor/bin/pint` comes back
-as `'vendor' is not recognized as an internal or external command` — which reads
-like a missing dependency and is really the wrong interpreter. This was measured
+as `'vendor' is not recognized as an internal or external command`. That reads
+like a missing dependency but is really the wrong interpreter. This was measured
 on a `windows-latest` runner, not assumed.
 
 ## The seeded account
 
-`make fresh yes=1` drops every table, migrates and seeds. It creates one known
-local account:
+Setup seeds one known local account, and `php artisan migrate:fresh --seed` (or
+`make fresh yes=1`) recreates it:
 
 ```
 email:    test@example.com
@@ -130,7 +142,7 @@ production. It exists only in seed data and only in your local database.
 
 Registration, login, logout, password reset, email verification, password
 confirmation and a profile page (update details, change password, delete the
-account) work straight after `make install`. Functionally it is what
+account) work straight after `composer run setup`. Functionally it is what
 `php artisan breeze:install blade` gives you — the same route names, URIs,
 middleware and behaviour — written in this template's own Blade components,
 SCSS and vanilla JavaScript, with no Breeze, Tailwind or Alpine and no extra

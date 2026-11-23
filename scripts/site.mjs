@@ -33,11 +33,11 @@ if (process.argv.includes('--dev')) {
 
   if (!(await isFree(vite.port))) {
     const pids = pidsOn(vite.port)
-    fail('make dev is already running', HINT, () => {
+    fail('a dev session is already running (make dev or composer run dev)', HINT, () => {
       console.error(
         `  Vite's port :${vite.port} is held by ${pids?.length ? `pid ${pids.join(', ')}` : 'another process'}.`,
       )
-      console.error('  A second make dev would break the first one: its live reload stops.')
+      console.error('  A second one would break the first: its live reload stops.')
       console.error(`\n  Use the session that is running${where ? ` — open ${where.url}` : ''} —`)
       console.error("  or stop it first with 'make stop'.")
     })

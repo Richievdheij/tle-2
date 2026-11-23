@@ -75,6 +75,26 @@ it('gives no URL for a project two levels below a parked directory', function ()
     expect(new Herd([$this->config])->siteUrl($this->projects.'/development/app'))->toBeNull();
 });
 
+it('names the directory a site name is already linked to', function (): void {
+    ($this->writePaths)([$this->config.'/Sites']);
+    File::ensureDirectoryExists($this->projects.'/other');
+    symlink($this->projects.'/other', $this->config.'/Sites/app');
+
+    expect(new Herd([$this->config])->directoryServedAs('App'))->toBe(realpath($this->projects.'/other'));
+});
+
+it('names the parked directory that already uses a site name', function (): void {
+    ($this->writePaths)([$this->config.'/Sites', $this->projects]);
+
+    expect(new Herd([$this->config])->directoryServedAs('app'))->toBe(realpath($this->projects.'/app'));
+});
+
+it('treats a site name nothing is served as as free', function (): void {
+    ($this->writePaths)([$this->config.'/Sites', $this->projects]);
+
+    expect(new Herd([$this->config])->directoryServedAs('unused'))->toBeNull();
+});
+
 it('knows Herd is installed even when it does not serve the project', function (): void {
     ($this->writePaths)([$this->config.'/Sites']);
 

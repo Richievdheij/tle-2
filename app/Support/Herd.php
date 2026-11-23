@@ -29,14 +29,15 @@ final readonly class Herd
     public function __construct(private array $configDirectories) {}
 
     /**
-     * The configuration directories Herd on macOS and Valet on macOS or Linux use,
-     * relative to a home directory. The same places laravel-vite-plugin looks
-     * when it secures Vite with the site's certificate.
+     * The configuration directories Herd on macOS, Herd on Windows and Valet on
+     * macOS or Linux use, relative to a home directory. The same places
+     * laravel-vite-plugin looks when it secures Vite with the site's certificate.
      */
     public static function forHome(string $home): self
     {
         return new self([
             $home.'/Library/Application Support/Herd/config/valet',
+            $home.'/.config/herd/config/valet',
             $home.'/.config/valet',
             $home.'/.valet',
         ]);
@@ -80,6 +81,31 @@ final readonly class Herd
                     $secure = is_file($configDirectory.'/Certificates/'.$host.'.crt');
 
                     return ($secure ? 'https://' : 'http://').$host;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The directory Herd already serves under a site name — through a link of
+     * that name, or a directory of that name in a parked path — or null when the
+     * name is free. `make herd` asks before linking, because `herd link` silently
+     * repoints an existing link and takes another project's site away.
+     */
+    public function directoryServedAs(string $siteName): ?string
+    {
+        foreach ($this->configDirectories as $configDirectory) {
+            foreach ($this->config($configDirectory)['paths'] as $registeredPath) {
+                foreach (glob(rtrim($registeredPath, '/').'/*') ?: [] as $entry) {
+                    if (strcasecmp(basename($entry), $siteName) === 0 && is_dir($entry)) {
+                        $directory = realpath($entry);
+
+                        if ($directory !== false) {
+                            return $directory;
+                        }
+                    }
                 }
             }
         }
