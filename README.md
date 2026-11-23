@@ -4,7 +4,33 @@ A Laravel 13 starter template with one front door, one gate list, and a checked
 environment contract. Built so that after the first afternoon nobody has to think
 about the toolchain again.
 
-## Getting started
+## Snel starten
+
+1. Clone de repository in je Herd-map (`~/Herd` of `C:\Users\<jij>\Herd`).
+2. Draai in die map één keer:
+
+   ```bash
+   composer run setup
+   ```
+
+3. Open de URL die erbij staat (`https://<map>.test`), of klik op de site in de
+   Herd-app.
+
+Klaar. Inloggen kan met `test@example.com` / `password`.
+Geen Herd? Draai `php artisan serve` en open `http://localhost:8000`.
+
+Alleen de site toevoegen in de Herd-app is niet genoeg: zonder
+`composer run setup` zijn er geen `.env`, database en CSS, en krijg je een
+foutpagina.
+
+| Wil je…                    | Draai                                |
+| -------------------------- | ------------------------------------ |
+| Live reload tijdens stylen | `composer run dev`                   |
+| De tests draaien           | `composer test`                      |
+| Na een `git pull`          | niets, de git hooks werken alles bij |
+| Er ziet iets raar uit      | `composer run refresh`               |
+
+## Getting started in detail
 
 Everything works with the plain Laravel commands (`composer`, `php artisan`,
 `npm`), on macOS, Linux and Windows. The `make` targets run exactly the same
