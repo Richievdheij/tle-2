@@ -54,7 +54,7 @@ final class DrawErdCommand extends Command
 
             throw_unless($exitCode === self::SUCCESS, RuntimeException::class, 'The migrations failed against SQLite; run `php artisan migrate --database=sqlite` against a scratch database to see why.');
 
-            $output = $this->argument('output');
+            $output = $this->input()->string('output')->toString();
 
             File::put($output, $this->render(Schema::connection('sqlite')));
 
