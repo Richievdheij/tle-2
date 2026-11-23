@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -31,8 +32,10 @@ it('writes the reset mail in Dutch', function (): void {
 
     $mail = new ResetPassword('a-token')->toMail($user);
 
-    expect($mail->subject)->toBe('Stel je wachtwoord opnieuw in')
-        ->and($mail->actionText)->toBe('Wachtwoord resetten');
+    expect($mail)
+        ->toBeInstanceOf(MailMessage::class)
+        ->subject->toBe('Stel je wachtwoord opnieuw in')
+        ->actionText->toBe('Wachtwoord resetten');
 });
 
 it('renders the reset password screen from the mailed link', function (): void {

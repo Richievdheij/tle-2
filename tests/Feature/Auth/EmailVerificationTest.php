@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
@@ -85,8 +86,10 @@ it('writes the verification mail in Dutch', function (): void {
 
     $mail = (new VerifyEmail)->toMail($user);
 
-    expect($mail->subject)->toBe('Verifieer je e-mailadres')
-        ->and($mail->actionText)->toBe('E-mailadres verifiëren');
+    expect($mail)
+        ->toBeInstanceOf(MailMessage::class)
+        ->subject->toBe('Verifieer je e-mailadres')
+        ->actionText->toBe('E-mailadres verifiëren');
 });
 
 it('keeps an unverified user out of the dashboard', function (): void {
