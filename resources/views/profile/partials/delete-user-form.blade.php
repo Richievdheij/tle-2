@@ -13,19 +13,12 @@
 <x-modal
     name="confirm-user-deletion"
     :show="$errors->userDeletion->isNotEmpty()"
-    aria-labelledby="confirm-user-deletion-title"
+    :title="__('Are you sure you want to delete your account?')"
+    :text="__('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.')"
 >
     <form class="form" method="POST" action="{{ route('profile.destroy') }}">
         @csrf
         @method('delete')
-
-        <h2 class="modal__title" id="confirm-user-deletion-title">
-            {{ __('Are you sure you want to delete your account?') }}
-        </h2>
-
-        <p class="modal__text">
-            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-        </p>
 
         <x-field
             name="password"
@@ -39,12 +32,12 @@
             autocomplete="current-password"
         />
 
-        <div class="form__actions form__actions--end">
-            <x-button command="close" commandfor="confirm-user-deletion">
+        <div class="modal__actions">
+            <x-button variant="secondary" command="close" commandfor="confirm-user-deletion">
                 {{ __('Cancel') }}
             </x-button>
 
-            <x-button variant="danger" type="submit">
+            <x-button variant="danger" icon="trash" type="submit">
                 {{ __('Delete Account') }}
             </x-button>
         </div>

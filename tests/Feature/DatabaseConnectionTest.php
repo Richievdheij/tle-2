@@ -42,6 +42,8 @@ it('never runs against the developer database', function (): void {
     if ($connection->getDriverName() === 'sqlite') {
         expect($connection->getDatabaseName())->toBe(':memory:');
     } else {
-        expect($connection->getDatabaseName())->not->toBe(database_path('database.sqlite'));
+        // `make integration` runs against <DB_DATABASE>_testing, never the
+        // database you develop in (scripts/db-env.mjs).
+        expect($connection->getDatabaseName())->toEndWith('_testing');
     }
 });

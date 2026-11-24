@@ -1,0 +1,128 @@
+@use '../abstracts' as *;
+
+// A composed skeleton sets --skeleton-width rather than overriding the shape.
+
+.skeleton {
+  --skeleton-width: 15rem;
+  --skeleton-height: 0.75rem;
+
+  display: block;
+  flex: none;
+  inline-size: var(--skeleton-width);
+  max-inline-size: 100%;
+  block-size: var(--skeleton-height);
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-disabled);
+  animation: skeleton-pulse 1.6s var(--easing-out) infinite alternate;
+
+  &--heading {
+    --skeleton-width: 12.5rem;
+    --skeleton-height: 1.25rem;
+
+    border-radius: var(--radius-xs);
+  }
+
+  &--tag {
+    --skeleton-width: 4rem;
+  }
+
+  &--circle {
+    --skeleton-width: var(--spacing-3xl);
+    --skeleton-height: var(--spacing-3xl);
+  }
+
+  &--button {
+    --skeleton-width: 10rem;
+    --skeleton-height: var(--spacing-4xl);
+
+    border-radius: var(--radius-xs);
+  }
+
+  &--image {
+    --skeleton-width: 100%;
+    --skeleton-height: auto;
+
+    aspect-ratio: 410 / 220;
+    border-radius: var(--radius-none);
+  }
+}
+
+@keyframes skeleton-pulse {
+  to {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 28.375rem; // the event card's height
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-surface);
+  box-shadow: var(--shadow-ring);
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xl);
+  }
+
+  &__heading {
+    --skeleton-width: 100%;
+  }
+
+  &__line {
+    --skeleton-width: 16.25rem;
+
+    &--short {
+      --skeleton-width: 12.5rem;
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-block-start: var(--spacing-2xs);
+  }
+
+  &__circle {
+    --skeleton-width: var(--spacing-2xl);
+    --skeleton-height: var(--spacing-2xl);
+  }
+
+  &__link-text {
+    --skeleton-width: 7.5rem;
+  }
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  min-block-size: var(--spacing-3xl);
+
+  &__lines {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    min-inline-size: 0;
+  }
+
+  &__line {
+    --skeleton-width: 11.25rem;
+
+    &--short {
+      --skeleton-width: 7.5rem;
+    }
+  }
+}

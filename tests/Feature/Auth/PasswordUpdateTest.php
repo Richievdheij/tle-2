@@ -37,7 +37,7 @@ it('requires the current password to update the password', function (): void {
         ]);
 
     $response
-        ->assertSessionHasErrorsIn('updatePassword', ['current_password' => 'Het wachtwoord is onjuist.'])
+        ->assertSessionHasErrorsIn('updatePassword', ['current_password' => 'The password is incorrect.'])
         ->assertRedirect('/profile');
     expect(Hash::check('password', $user->refresh()->password))->toBeTrue();
 });

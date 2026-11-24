@@ -1,0 +1,30 @@
+@use '../abstracts' as *;
+
+.arrow-link {
+  @include text('link');
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-2xs) var(--spacing-xs) var(--spacing-2xs) var(--spacing-2xs);
+  border-radius: var(--radius-xs);
+  color: var(--color-text-primary);
+  text-decoration: none;
+
+  &__circle {
+    @include transition(background-color, var(--duration-moderate));
+
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--spacing-2xl);
+    block-size: var(--spacing-2xl);
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-accent);
+    color: var(--color-text-on-accent);
+  }
+
+  &[href]:hover &__circle {
+    background-color: var(--color-bg-accent-hover);
+  }
+}

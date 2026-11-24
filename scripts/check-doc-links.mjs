@@ -20,12 +20,8 @@ import { trackedFiles, trackedWithExtension } from './lib/git.mjs'
  * Documents that describe a different repository. Their links and anchors are
  * still checked — those are internal and must hold — but their backticked paths
  * name files in the system they were written for, not in this one.
- *
- * TOOLCHAIN-BOOTSTRAP.md is the imported specification this toolchain was built
- * from, kept verbatim as the record.
- *
  */
-const EXTERNAL_SPECS = new Set(['TOOLCHAIN-BOOTSTRAP.md'])
+const EXTERNAL_SPECS = new Set([])
 
 const isExternal = (document) => EXTERNAL_SPECS.has(document)
 

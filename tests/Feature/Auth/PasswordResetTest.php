@@ -23,19 +23,19 @@ it('sends a reset link to a known address', function (): void {
 
     $response = post('/forgot-password', ['email' => $user->email]);
 
-    $response->assertSessionHas('status', 'We hebben je een e-mail gestuurd met een link om je wachtwoord te resetten.');
+    $response->assertSessionHas('status', 'We have emailed your password reset link.');
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
-it('writes the reset mail in Dutch', function (): void {
+it('writes the reset mail', function (): void {
     $user = User::factory()->create();
 
     $mail = new ResetPassword('a-token')->toMail($user);
 
     expect($mail)
         ->toBeInstanceOf(MailMessage::class)
-        ->subject->toBe('Stel je wachtwoord opnieuw in')
-        ->actionText->toBe('Wachtwoord resetten');
+        ->subject->toBe('Reset your password')
+        ->actionText->toBe('Reset Password');
 });
 
 it('renders the reset password screen from the mailed link', function (): void {
@@ -65,7 +65,7 @@ it('resets the password with a valid token', function (): void {
             'password_confirmation' => 'new-password',
         ])
             ->assertSessionHasNoErrors()
-            ->assertSessionHas('status', 'Je wachtwoord is opnieuw ingesteld.')
+            ->assertSessionHas('status', 'Your password has been reset.')
             ->assertRedirect(route('login'));
 
         return true;
@@ -87,6 +87,6 @@ it('refuses to reset the password with an invalid token', function (): void {
         'password_confirmation' => 'new-password',
     ]);
 
-    $response->assertSessionHasErrors(['email' => 'Deze link om je wachtwoord te resetten is ongeldig.']);
+    $response->assertSessionHasErrors(['email' => 'This password reset token is invalid.']);
     expect(Hash::check('password', $user->refresh()->password))->toBeTrue();
 });

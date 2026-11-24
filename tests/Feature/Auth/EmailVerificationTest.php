@@ -77,19 +77,19 @@ it('confirms on the prompt that the link was re-sent', function (): void {
     $user = VerifiableUser::unverified();
 
     actingAs($user)->from('/verify-email')->followingRedirects()->post('/email/verification-notification')
-        ->assertSee('Er is een nieuwe verificatielink verstuurd naar het e-mailadres dat je bij de registratie hebt opgegeven.')
+        ->assertSee('A new verification link has been sent to the email address you provided during registration.')
         ->assertDontSee('verification-link-sent');
 });
 
-it('writes the verification mail in Dutch', function (): void {
+it('writes the verification mail', function (): void {
     $user = VerifiableUser::unverified();
 
     $mail = (new VerifyEmail)->toMail($user);
 
     expect($mail)
         ->toBeInstanceOf(MailMessage::class)
-        ->subject->toBe('Verifieer je e-mailadres')
-        ->actionText->toBe('E-mailadres verifiëren');
+        ->subject->toBe('Verify your email address')
+        ->actionText->toBe('Verify Email Address');
 });
 
 it('keeps an unverified user out of the dashboard', function (): void {

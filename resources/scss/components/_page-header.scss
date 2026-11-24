@@ -1,0 +1,86 @@
+@use '../abstracts' as *;
+
+.page-header {
+  --page-header-aside-width: 20rem;
+
+  padding-block: var(--spacing-3xl);
+  background-color: var(--color-bg-page);
+
+  @include from('desktop') {
+    padding-block: var(--spacing-5xl);
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
+
+    @include from('desktop') {
+      flex-direction: row;
+      align-items: flex-end;
+      gap: var(--spacing-5xl);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    min-inline-size: 0;
+  }
+
+  &__title {
+    @include text('heading-1');
+
+    color: var(--color-text-primary);
+    overflow-wrap: anywhere;
+  }
+
+  &__intro {
+    @include text('body-large');
+
+    max-inline-size: var(--form-max);
+    color: var(--color-text-secondary);
+  }
+
+  // Items carry a left divider; shifting and clipping the list hides each line's first.
+  &__details {
+    --page-header-detail-step: calc(2 * var(--spacing-md) + 1px);
+
+    padding-block-start: var(--spacing-xs);
+    overflow-x: clip;
+  }
+
+  &__detail-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: var(--spacing-sm);
+    margin-inline-start: calc(-1 * var(--page-header-detail-step));
+
+    > * {
+      position: relative;
+      margin-inline-start: var(--page-header-detail-step);
+    }
+
+    > *::after {
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-start: calc(-1 * (var(--spacing-md) + 1px));
+      inline-size: 1px;
+      block-size: var(--spacing-md);
+      background-color: var(--color-border-strong);
+      content: '';
+      translate: 0 -50%;
+    }
+  }
+
+  &__aside {
+    flex: none;
+
+    @include from('desktop') {
+      inline-size: var(--page-header-aside-width);
+    }
+  }
+}

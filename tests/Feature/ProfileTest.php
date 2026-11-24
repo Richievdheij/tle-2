@@ -42,7 +42,7 @@ it('shows "Saved." after an update, not the status key', function (): void {
         'name' => 'Test User',
         'email' => $user->email,
     ])
-        ->assertSee('Opgeslagen.')
+        ->assertSee('Saved.')
         ->assertDontSee('profile-updated');
 });
 
@@ -64,7 +64,7 @@ it('refuses an email address that belongs to another account', function (): void
     actingAs($user)->patch('/profile', [
         'name' => 'Test User',
         'email' => 'taken@example.com',
-    ])->assertSessionHasErrors(['email' => 'Dit e-mailadres is al in gebruik.']);
+    ])->assertSessionHasErrors(['email' => 'The email has already been taken.']);
 
     expect($user->refresh()->email)->not->toBe('taken@example.com');
 });
@@ -72,7 +72,7 @@ it('refuses an email address that belongs to another account', function (): void
 it('offers to re-send the verification email for an unverified address', function (): void {
     $user = VerifiableUser::unverified();
 
-    actingAs($user)->get('/profile')->assertSee('Je e-mailadres is nog niet geverifieerd.')->assertSeeHtml('form="send-verification"');
+    actingAs($user)->get('/profile')->assertSee('Your email address is unverified.')->assertSeeHtml('form="send-verification"');
 });
 
 it('deletes the account', function (): void {
@@ -97,7 +97,7 @@ it('requires the correct password to delete the account', function (): void {
         ]);
 
     $response
-        ->assertSessionHasErrorsIn('userDeletion', ['password' => 'Het wachtwoord is onjuist.'])
+        ->assertSessionHasErrorsIn('userDeletion', ['password' => 'The password is incorrect.'])
         ->assertRedirect('/profile');
     assertModelExists($user);
 });

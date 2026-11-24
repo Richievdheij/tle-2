@@ -45,7 +45,7 @@ it('refuses an email address that already has an account', function (): void {
 
     assertGuest();
     assertDatabaseCount('users', 1);
-    $response->assertSessionHasErrors(['email' => 'Dit e-mailadres is al in gebruik.']);
+    $response->assertSessionHasErrors(['email' => 'The email has already been taken.']);
 });
 
 it('refuses a password that was not confirmed', function (): void {
@@ -58,7 +58,7 @@ it('refuses a password that was not confirmed', function (): void {
 
     assertGuest();
     assertDatabaseCount('users', 0);
-    $response->assertSessionHasErrors(['password' => 'De bevestiging van wachtwoord komt niet overeen.']);
+    $response->assertSessionHasErrors(['password' => 'The password field confirmation does not match.']);
 });
 
 it('refuses an email address with capitals', function (): void {
@@ -70,5 +70,5 @@ it('refuses an email address with capitals', function (): void {
     ]);
 
     assertGuest();
-    $response->assertSessionHasErrors(['email' => 'Het veld e-mailadres mag alleen kleine letters bevatten.']);
+    $response->assertSessionHasErrors(['email' => 'The email field must be lowercase.']);
 });

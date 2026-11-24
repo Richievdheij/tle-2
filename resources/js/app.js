@@ -1,22 +1,10 @@
-/**
- * The application entry point Vite bundles.
- *
- * Deliberately small. This template ships no frontend framework: Blade renders
- * the page and this file is where progressive enhancement goes. Keep it that way
- * until a real need arrives — every dependency added here is one every teammate
- * has to reason about.
- *
- * Every function below improves markup that already works without it: the menus
- * are <details>, the modal is a <dialog> opened by an invoker command.
- */
+// Progressive enhancement only: every function improves markup that already works without it.
 
-/**
- * Dismiss a flash message.
- *
- * Written out rather than left as a comment so there is one worked example of the
- * conventions: query by data attribute, never by a CSS class (a class is for
- * styling and gets renamed), and leave the markup usable without JavaScript.
- */
+import { initialiseHostRows } from './components/host-row.js'
+import { initialiseHostTables } from './components/host-table.js'
+import { initialiseTooltips } from './components/tooltip.js'
+
+// Dismiss a flash message.
 function initialiseDismissibleAlerts() {
   for (const button of document.querySelectorAll('[data-dismiss="alert"]')) {
     button.addEventListener('click', () => {
@@ -25,13 +13,7 @@ function initialiseDismissibleAlerts() {
   }
 }
 
-/**
- * The user menu and the hamburger menu, both <details>.
- *
- * <details> already opens and closes from the keyboard. What it lacks is what a
- * menu is expected to do besides: Escape closes it and puts focus back on its
- * toggle, and a click anywhere else closes it.
- */
+// <details> menus: Escape or an outside click closes them.
 function initialiseDisclosures() {
   const disclosures = [...document.querySelectorAll('[data-disclosure]')]
 
@@ -61,14 +43,25 @@ function initialiseDisclosures() {
   })
 }
 
-/**
- * Modals: native <dialog>, opened by `command="show-modal"` buttons.
- *
- * Two gaps are filled here. A browser without invoker commands gets the same
- * behaviour from a click handler. And a dialog the server rendered open — after a
- * failed submit from inside it — is reopened as a real modal, with focus going
- * back to the button that would have opened it once it closes.
- */
+// The search bar closes on blur (:focus-within); reset and Escape move focus off it.
+function initialiseSearchBars() {
+  for (const bar of document.querySelectorAll('[data-search-bar]')) {
+    const close = () => {
+      if (bar.contains(document.activeElement)) {
+        document.activeElement.blur()
+      }
+    }
+
+    bar.addEventListener('reset', () => setTimeout(close))
+    bar.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        bar.reset()
+      }
+    })
+  }
+}
+
+// Modals: invoker-command fallback, and reopen a server-rendered open dialog as a real modal.
 function initialiseModals() {
   const supportsInvokers = 'command' in HTMLButtonElement.prototype
 
@@ -92,8 +85,7 @@ function initialiseModals() {
   }
 
   for (const dialog of document.querySelectorAll('dialog[data-modal]')) {
-    // A click on the backdrop lands on the <dialog> itself; one on its content
-    // lands on a child. `closedby="any"` does this natively where supported.
+    // A backdrop click targets the <dialog> itself, a content click a child.
     dialog.addEventListener('click', (event) => {
       if (event.target === dialog) {
         dialog.close()
@@ -110,11 +102,7 @@ function initialiseModals() {
   }
 }
 
-/**
- * "Saved." beside a form's button fades out after two seconds, as it does in
- * Breeze. It is a role="status" region, so it has been announced by then.
- * Without JavaScript the message simply stays.
- */
+// Fade out transient status messages ("Saved.") after two seconds.
 function initialiseTransientMessages() {
   for (const message of document.querySelectorAll('[data-transient]')) {
     setTimeout(() => {
@@ -127,6 +115,10 @@ function initialiseTransientMessages() {
 document.addEventListener('DOMContentLoaded', () => {
   initialiseDismissibleAlerts()
   initialiseDisclosures()
+  initialiseSearchBars()
   initialiseModals()
   initialiseTransientMessages()
+  initialiseHostRows()
+  initialiseHostTables()
+  initialiseTooltips()
 })

@@ -46,6 +46,30 @@
     }
   },
   "scripts": {
+    "setup": [
+      "Composer\\Config::disableProcessTimeout",
+      "@composer install --no-interaction --prefer-dist",
+      "npm ci",
+      "git config core.hooksPath .githooks",
+      "git config commit.template .gitmessage",
+      "node scripts/herd.mjs",
+      "node scripts/env.mjs local",
+      "@php artisan migrate --seed --force",
+      "npm run build",
+      "node scripts/site.mjs"
+    ],
+    "dev": [
+      "Composer\\Config::disableProcessTimeout",
+      "node scripts/site.mjs --dev",
+      "@php artisan dev"
+    ],
+    "test": [
+      "@php artisan test --testsuite=Unit,Feature,Arch"
+    ],
+    "refresh": [
+      "Composer\\Config::disableProcessTimeout",
+      "node scripts/update.mjs"
+    ],
     "verify": "make verify",
     "post-autoload-dump": [
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -79,5 +103,11 @@
     }
   },
   "minimum-stability": "stable",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "scripts-descriptions": {
+    "setup": "Install everything a fresh clone needs, link it in Herd, migrate, seed and build",
+    "dev": "Live Vite, queue and logs, plus artisan serve when Herd does not serve the site",
+    "test": "Run the Unit, Feature and Arch suites",
+    "refresh": "Bring dependencies, database and assets up to date after a pull"
+  }
 }

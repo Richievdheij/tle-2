@@ -1,34 +1,87 @@
 @use '../abstracts' as *;
 
+// The border is an inset shadow, so going from 1px to 2px never moves the text.
+
 .field {
+  --field-border: var(--color-border-strong);
+  --field-border-width: 1px;
+
   display: flex;
   flex-direction: column;
-  gap: var(--space-3xs);
-  margin-block-end: var(--space-s);
+  gap: var(--spacing-xs);
+  margin-block-end: var(--spacing-md);
 
   &__label {
-    font-weight: var(--weight-medium);
-    font-size: var(--text-s);
+    @include text('label');
+
+    color: var(--color-text-primary);
   }
 
   &__control {
-    padding: var(--space-2xs) var(--space-xs);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-s);
-    background-color: var(--color-surface);
+    @include text('body');
+    @include transition(box-shadow);
+
+    inline-size: 100%;
+    min-block-size: var(--spacing-4xl);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 0;
+    border-radius: var(--radius-xs);
+    background-color: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    box-shadow: inset 0 0 0 var(--field-border-width) var(--field-border);
+    caret-color: var(--color-text-primary);
+
+    &::placeholder {
+      color: var(--color-text-secondary);
+      opacity: 1;
+    }
+
+    &:hover {
+      --field-border: var(--color-border-primary);
+    }
+
+    // The 2px border is the focus indicator, so it replaces the outline.
+    &:focus {
+      --field-border: var(--color-border-primary);
+      --field-border-width: 2px;
+
+      outline: none;
+    }
+
+    &:disabled {
+      --field-border: transparent;
+
+      background-color: var(--color-bg-disabled);
+      color: var(--color-text-disabled);
+      cursor: not-allowed;
+
+      &::placeholder {
+        color: var(--color-text-disabled);
+      }
+    }
   }
 
   &__hint {
-    color: var(--color-text-muted);
-    font-size: var(--text-s);
+    @include text('body-small');
+
+    color: var(--color-text-secondary);
   }
 
   &__error {
-    color: var(--color-danger);
-    font-size: var(--text-s);
+    @include text('body-small');
+
+    color: var(--color-text-error);
   }
 
-  &--invalid &__control {
-    border-color: var(--color-danger);
+  &--invalid &__control,
+  &--invalid &__control:hover,
+  &--invalid &__control:focus {
+    --field-border: var(--color-border-error);
+    --field-border-width: 2px;
+  }
+
+  &:has(&__control:disabled) &__label,
+  &:has(&__control:disabled) &__hint {
+    color: var(--color-text-disabled);
   }
 }

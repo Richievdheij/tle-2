@@ -1,0 +1,22 @@
+// Cards get a ring, not a floating shadow; real shadows are for menus and dialogs only.
+
+:root {
+  --shadow-ring: 0 0 0 1px rgb(1 40 60 / 8%), 0 1px 2px 0 rgb(1 40 60 / 4%);
+  --shadow-ring-hover: 0 0 0 1px rgb(1 40 60 / 16%), 0 1px 2px 0 rgb(1 40 60 / 6%);
+  --shadow-menu:
+    0 0 0 1px rgb(1 40 60 / 8%), 0 2px 4px -1px rgb(1 40 60 / 6%),
+    0 8px 16px -4px rgb(1 40 60 / 10%);
+  --shadow-dialog:
+    0 0 0 1px rgb(1 40 60 / 8%), 0 4px 8px -2px rgb(1 40 60 / 6%),
+    0 20px 40px -8px rgb(1 40 60 / 14%);
+
+  --scrim-left: linear-gradient(to right, rgb(1 40 60 / 85%) 0%, rgb(1 40 60 / 0%) 60%);
+  --scrim-bottom: linear-gradient(to bottom, rgb(1 40 60 / 0%) 40%, rgb(1 40 60 / 85%) 100%);
+  --scrim-card: linear-gradient(to bottom, rgb(1 40 60 / 0%) 35%, rgb(1 40 60 / 45%) 100%);
+  // Paired with --zoom-card-hover.
+  --scrim-card-hover: linear-gradient(to bottom, rgb(1 40 60 / 0%) 15%, rgb(1 40 60 / 70%) 100%);
+  --zoom-card-hover: 1.06;
+
+  // Disabled controls that have no disabled colour of their own.
+  --opacity-disabled: 0.5;
+}

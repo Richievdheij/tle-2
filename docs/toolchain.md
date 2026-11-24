@@ -168,6 +168,11 @@ committed, from whichever machine committed it.
 teaches people to stop committing, and the granular history is what a reviewer
 reads.
 
+**post-merge, post-checkout and post-rewrite run `make update`.** Herd serves the
+built assets whenever `make dev` is not running, so a pull that changes SCSS
+otherwise shows the old styling with nothing to say why. These hooks are
+conveniences, not gates: they never block, and print `make update` when it fails.
+
 ## Deliberately not set up
 
 Stated so the next person adds them **on purpose** rather than assuming they

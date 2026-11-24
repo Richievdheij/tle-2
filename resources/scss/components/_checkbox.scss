@@ -1,22 +1,71 @@
 @use '../abstracts' as *;
 
-// A checkbox with its label beside it rather than above, which is the one shape
-// <x-field> does not draw.
+// The native input is the box (appearance: none); the check icon sits on top.
 
 .checkbox {
   display: flex;
   align-items: center;
-  gap: var(--space-2xs);
-  margin-block-end: var(--space-s);
+  gap: var(--spacing-sm);
+
+  &__box {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--spacing-lg);
+    block-size: var(--spacing-lg);
+  }
 
   &__control {
-    inline-size: 1rem;
-    block-size: 1rem;
+    @include transition((background-color, box-shadow), var(--duration-instant));
+
+    grid-area: 1 / 1;
+    inline-size: 100%;
+    block-size: 100%;
     margin: 0;
-    accent-color: var(--color-accent);
+    border-radius: var(--radius-xs);
+    background-color: var(--color-bg-page);
+    box-shadow: inset 0 0 0 1px var(--color-border-primary);
+    cursor: pointer;
+    appearance: none;
+
+    &:checked {
+      background-color: var(--color-bg-primary);
+    }
+
+    &:disabled {
+      background-color: var(--color-bg-disabled);
+      box-shadow: inset 0 0 0 1px var(--color-border-strong);
+      cursor: not-allowed;
+    }
+  }
+
+  &__check {
+    @include transition(opacity, var(--duration-instant));
+
+    grid-area: 1 / 1;
+    color: var(--color-text-inverse);
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &__control:checked + &__check {
+    opacity: 1;
+  }
+
+  &__control:disabled + &__check {
+    color: var(--color-text-disabled);
   }
 
   &__label {
-    font-size: var(--text-s);
+    @include text('body');
+
+    color: var(--color-text-primary);
+    cursor: pointer;
+  }
+
+  &:has(&__control:disabled) &__label {
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
   }
 }

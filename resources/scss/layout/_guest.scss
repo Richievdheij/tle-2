@@ -1,30 +1,22 @@
 @use '../abstracts' as *;
 
-// The guest layout: the app name above one centred card. Login, registration,
-// the password reset pair and the two interstitials all use it.
+// The guest layout: the logo above one centred card.
 
 .guest {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-m);
+  gap: var(--spacing-xl);
   min-height: 100svh;
-  padding: var(--space-xl) var(--space-s);
-  background-color: var(--color-surface-raised);
+  padding: var(--spacing-4xl) var(--page-margin);
+  background-color: var(--color-bg-page);
 
-  @include from('s') {
+  @include from('tablet') {
     justify-content: center;
-  }
-
-  &__brand {
-    font-weight: var(--weight-bold);
-    font-size: var(--text-xl);
-    color: var(--color-text);
-    text-decoration: none;
   }
 
   &__main {
     inline-size: 100%;
-    max-inline-size: var(--card-width);
+    max-inline-size: var(--auth-max);
   }
 }

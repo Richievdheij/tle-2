@@ -31,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
      * serves this directory that second server is redundant — and it claims
      * APP_PORT, so two Herd projects running `make dev` side by side collide on
      * it. Vite, the queue listener and the log tail still run.
+     *
+     * Windows has no HOME; USERPROFILE is the same directory there.
      */
     private function leaveServingToHerd(): void
     {
@@ -38,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
             return;
         }
 
-        if (Herd::forHome((string) getenv('HOME'))->servesPath(base_path())) {
+        if (Herd::forHome((string) (getenv('HOME') ?: getenv('USERPROFILE')))->servesPath(base_path())) {
             DevCommands::except('server');
         }
     }

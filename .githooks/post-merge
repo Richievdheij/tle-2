@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+# After `git pull` (or any merge): bring dependencies, the database and the built
+# assets up to date, so the site Herd serves shows what was just pulled — new
+# styling included — without anybody remembering `npm run build` or a migration.
+#
+# Never blocks anything: git has already merged when this runs, and a failure here
+# is printed with the command that repeats it. Plain Node, no make, so it works
+# on Windows too.
+
+root="$(git rev-parse --show-toplevel)"
+cd "$root" || exit 0
+
+# A clone that has not run `make install` yet has nothing to update.
+[ -f vendor/autoload.php ] || exit 0
+
+node scripts/update.mjs ||
+  printf "\033[1;31m✗\033[0m %s\n" "Updating after the pull failed — fix the above, then run 'composer run refresh' or 'make update'"
+exit 0

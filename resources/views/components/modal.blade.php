@@ -1,31 +1,22 @@
 {{--
-    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()">
+    Modal: a native <dialog> for confirming an irreversible action. Open/close with invoker commands; resources/js/app.js adds a fallback and backdrop click.
 
-    A native <dialog>, opened as a modal by any button that names it:
+    <x-button command="show-modal" commandfor="delete-event">{{ __('Delete') }}</x-button>
+    <x-modal name="delete-event" :title="__('Delete event?')" :text="__('This cannot be undone.')">
+        <x-slot:actions>
+            <x-button variant="secondary" command="close" commandfor="delete-event">{{ __('Cancel') }}</x-button>
+            <x-button variant="danger" icon="trash" type="submit" form="delete-event-form">{{ __('Delete') }}</x-button>
+        </x-slot:actions>
+    </x-modal>
 
-        <x-button command="show-modal" commandfor="confirm-user-deletion">…</x-button>
-        <x-button command="close" commandfor="confirm-user-deletion">…</x-button>
-
-    `command`/`commandfor` are HTML invoker commands, so opening and closing take
-    no JavaScript in a current browser. The browser also supplies what Breeze's
-    Alpine modal wrote by hand: the focus trap, Escape to close, the inert page
-    behind it and focus returning to the button that opened it.
-    resources/js/app.js covers a browser without invoker commands and a click on
-    the backdrop.
-
-    Props — Blade has no typed props, so this block IS the contract.
-
-      string $name   REQUIRED. The dialog id, which commandfor points at.
-      bool   $show   open on page load — after a failed submit from inside the
-                     dialog, so the error is shown where the field is. Rendered
-                     as `open`, so it is visible without JavaScript too; app.js
-                     then reopens it as a true modal.
-
-    Styles: resources/scss/components/_modal.scss
+    Props: name (required; the dialog id), title, text, show (open on load, e.g. after a failed submit), $actions slot.
+    A dialog holding a form puts the whole form in the slot, with its buttons in a .modal__actions div.
 --}}
 @props([
     'name',
     'show' => false,
+    'title' => null,
+    'text' => null,
 ])
 
 <dialog
@@ -33,9 +24,23 @@
     id="{{ $name }}"
     closedby="any"
     data-modal
+    @if ($title) aria-labelledby="{{ $name }}-title" @endif
+    @if ($text) aria-describedby="{{ $name }}-text" @endif
     @if ($show) open data-modal-show @endif
 >
     <div class="modal__body">
+        @if ($title)
+            <h2 class="modal__title" id="{{ $name }}-title">{{ $title }}</h2>
+        @endif
+
+        @if ($text)
+            <p class="modal__text" id="{{ $name }}-text">{{ $text }}</p>
+        @endif
+
         {{ $slot }}
+
+        @isset($actions)
+            <div class="modal__actions">{{ $actions }}</div>
+        @endisset
     </div>
 </dialog>

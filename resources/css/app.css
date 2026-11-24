@@ -1,0 +1,5 @@
+/*
+ * Plain CSS, no Sass. It lands in the `app` cascade layer, the last one, so a
+ * rule here always wins over the design system. Every token (var(--spacing-md))
+ * and every class (.button, .text-heading-1) is available; native nesting works.
+ */

@@ -22,11 +22,11 @@ it('registers, logs out, logs back in and opens the profile', function (): void 
         ->type('password_confirmation', 'a-long-password')
         ->click('main form button[type="submit"]')
         ->assertPathIs('/dashboard')
-        ->assertSee('Je bent ingelogd!')
+        ->assertSee("You're logged in!")
 
-        ->click('.dropdown__toggle')
+        ->click('.user-menu__trigger')
         ->assertSee('ada@example.com')
-        ->click('.dropdown__menu button[type="submit"]')
+        ->click('.user-menu__panel button[type="submit"]')
         ->assertPathIs('/')
 
         ->navigate('/login')
@@ -35,8 +35,8 @@ it('registers, logs out, logs back in and opens the profile', function (): void 
         ->click('main form button[type="submit"]')
         ->assertPathIs('/dashboard')
 
-        ->click('.dropdown__toggle')
-        ->click('.dropdown__menu a')
+        ->click('.user-menu__trigger')
+        ->click('.user-menu__panel a[href$="/profile"]')
         ->assertPathIs('/profile')
         ->assertValue('#name', 'Ada Lovelace')
 

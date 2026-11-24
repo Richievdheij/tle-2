@@ -1,29 +1,40 @@
+@use '../abstracts' as *;
+
 body {
-  font-family: var(--font-body);
-  font-size: var(--text-m);
-  font-weight: var(--weight-normal);
-  color: var(--color-text);
-  background-color: var(--color-surface);
+  @include text('body');
+
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-page);
+}
+
+h1 {
+  @include text('heading-1');
+}
+
+h2 {
+  @include text('heading-2');
+}
+
+h3 {
+  @include text('heading-3');
+}
+
+h4 {
+  @include text('heading-4');
+}
+
+h5,
+h6 {
+  @include text('heading-5');
 }
 
 h1,
 h2,
-h3 {
-  line-height: var(--leading-tight);
-  font-weight: var(--weight-bold);
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
-}
-
-h1 {
-  font-size: var(--text-2xl);
-}
-
-h2 {
-  font-size: var(--text-xl);
-}
-
-h3 {
-  font-size: var(--text-l);
 }
 
 p {
@@ -31,12 +42,34 @@ p {
 }
 
 a {
-  color: var(--color-accent);
+  color: var(--color-text-link);
   text-underline-offset: 0.15em;
 }
 
+strong,
+b {
+  font-weight: var(--font-weight-semibold);
+}
+
+small {
+  @include text('body-small');
+}
+
 code,
+kbd,
+samp,
 pre {
-  font-family: var(--font-mono);
-  font-size: var(--text-s);
+  @include text('data');
+}
+
+hr {
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background-color: var(--color-border-subtle);
+}
+
+::selection {
+  background-color: var(--color-bg-accent);
+  color: var(--color-text-on-accent);
 }

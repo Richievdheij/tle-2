@@ -1,30 +1,73 @@
 @use '../abstracts' as *;
 
 .alert {
-  padding: var(--space-xs) var(--space-s);
-  border: 1px solid var(--color-border);
-  border-inline-start-width: 4px;
-  border-radius: var(--radius-s);
-  background-color: var(--color-surface-raised);
-  margin-block-end: var(--space-m);
+  --alert-bg: var(--color-bg-info);
+  --alert-bar: var(--color-border-accent);
+  --alert-title: var(--color-text-primary);
 
-  &__title {
-    font-weight: var(--weight-medium);
-  }
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+  border-inline-start: var(--spacing-2xs) solid var(--alert-bar);
+  border-radius: var(--radius-sm);
+  background-color: var(--alert-bg);
+  color: var(--color-text-primary);
 
   &__body {
-    color: var(--color-text-muted);
-    font-size: var(--text-s);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--spacing-2xs);
+    min-inline-size: 0;
+    padding: var(--spacing-md);
   }
 
-  // Colour is never the only signal. The flash partial pairs each variant with a
-  // role (status or alert) and a visible title, because a reader who cannot
-  // distinguish the border colours gets nothing from the border alone.
+  &__title {
+    @include text('body-bold');
+
+    color: var(--alert-title);
+  }
+
+  &__text {
+    @include text('body-small');
+  }
+
+  &__action {
+    flex: none;
+    padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs) 0;
+  }
+
+  &__close {
+    @include button-reset;
+    @include transition(color);
+
+    display: grid;
+    place-items: center;
+    inline-size: var(--spacing-2xl);
+    block-size: var(--spacing-2xl);
+    border-radius: var(--radius-xs);
+    color: var(--color-text-secondary);
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+
   &--success {
-    border-inline-start-color: var(--color-success);
+    --alert-bg: var(--color-bg-success);
+    --alert-bar: var(--color-text-success);
+    --alert-title: var(--color-text-success);
   }
 
-  &--danger {
-    border-inline-start-color: var(--color-danger);
+  &--warning {
+    --alert-bg: var(--color-bg-warning);
+    --alert-bar: var(--color-text-warning);
+    --alert-title: var(--color-text-warning);
+  }
+
+  &--error {
+    --alert-bg: var(--color-bg-error);
+    --alert-bar: var(--color-text-error);
+    --alert-title: var(--color-text-error);
   }
 }

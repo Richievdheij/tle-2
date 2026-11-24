@@ -40,7 +40,7 @@ it('sends a user back to the page they asked for after logging in', function ():
     $response->assertRedirect(route('profile.edit'));
 });
 
-it('rejects a wrong password with a Dutch message', function (): void {
+it('rejects a wrong password', function (): void {
     $user = User::factory()->create();
 
     $response = post('/login', [
@@ -50,7 +50,7 @@ it('rejects a wrong password with a Dutch message', function (): void {
 
     assertGuest();
     $response->assertSessionHasErrors([
-        'email' => 'Deze combinatie van e-mailadres en wachtwoord is niet bij ons bekend.',
+        'email' => 'These credentials do not match our records.',
     ]);
 });
 
@@ -70,7 +70,7 @@ it('locks the login out after five failed attempts', function (): void {
 
     assertGuest();
     $response->assertSessionHasErrors([
-        'email' => 'Te veel inlogpogingen. Probeer het over 60 seconden opnieuw.',
+        'email' => 'Too many login attempts. Please try again in 60 seconds.',
     ]);
     Event::assertDispatched(Lockout::class);
 });

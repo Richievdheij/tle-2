@@ -1,0 +1,18 @@
+@use '../abstracts' as *;
+
+.meta-item {
+  @include text('body');
+
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-text-primary);
+
+  &__icon {
+    flex: none;
+  }
+
+  &__text {
+    min-inline-size: 0;
+  }
+}

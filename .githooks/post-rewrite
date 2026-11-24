@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# After a rebase — including `git pull --rebase`, which never runs post-merge:
+# the same update as after a pull. post-checkout skips every step of a rebase,
+# so this is where the rebased tree is brought up to date, once.
+#
+# $1 is `rebase` or `amend`; an amend changes no files worth rebuilding for.
+
+[ "$1" = rebase ] || exit 0
+
+root="$(git rev-parse --show-toplevel)"
+cd "$root" || exit 0
+
+[ -f vendor/autoload.php ] || exit 0
+
+node scripts/update.mjs ||
+  printf "\033[1;31m✗\033[0m %s\n" "Updating after the rebase failed — fix the above, then run 'composer run refresh' or 'make update'"
+exit 0

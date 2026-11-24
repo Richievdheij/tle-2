@@ -1,0 +1,9 @@
+@use '../abstracts' as *;
+
+// One class per text style, the plain-CSS twin of the `text()` mixin.
+
+@each $style in $text-styles {
+  .text-#{$style} {
+    @include text($style);
+  }
+}

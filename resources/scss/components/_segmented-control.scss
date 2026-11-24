@@ -1,0 +1,58 @@
+@use '../abstracts' as *;
+
+.segmented-control {
+  --segmented-control-inset: 3px;
+  --segmented-control-gap: 2px;
+  --segmented-control-segment-padding: 0.875rem;
+  --segmented-control-count-padding: 0.375rem;
+
+  display: inline-flex;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  padding: var(--segmented-control-inset);
+  border-radius: calc(var(--radius-xs) + 1px);
+  background-color: var(--color-bg-subtle);
+
+  &__list {
+    display: flex;
+    gap: var(--segmented-control-gap);
+  }
+
+  &__segment {
+    @include button-reset;
+    @include text('body-bold');
+    @include transition((color, background-color, box-shadow));
+
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--segmented-control-segment-padding);
+    border-radius: var(--radius-xs);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+
+    &.is-selected {
+      background-color: var(--color-bg-surface);
+      color: var(--color-text-primary);
+      box-shadow: var(--shadow-ring);
+    }
+  }
+
+  &__count {
+    @include text('data-small');
+
+    padding-inline: var(--segmented-control-count-padding);
+    border-radius: var(--radius-xs);
+    background-color: var(--color-border-subtle);
+    color: var(--color-text-primary);
+  }
+
+  &__segment.is-selected &__count {
+    background-color: var(--color-bg-accent);
+  }
+}

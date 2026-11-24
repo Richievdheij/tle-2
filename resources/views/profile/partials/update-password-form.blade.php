@@ -1,5 +1,4 @@
-{{-- Validated into the `updatePassword` error bag, and every id is prefixed:
-     the delete form further down the page has a `password` field of its own. --}}
+{{-- Uses the `updatePassword` error bag and prefixed ids: the delete form on this page has its own password field. --}}
 <header class="card__header">
     <h2 class="card__title" id="update-password-title">{{ __('Update Password') }}</h2>
 

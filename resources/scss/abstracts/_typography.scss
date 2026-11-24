@@ -1,0 +1,44 @@
+@use 'sass:list';
+
+// Apply one text style whole: @include text('heading-5');
+
+$text-styles: (
+  'display',
+  'heading-1',
+  'heading-2',
+  'heading-3',
+  'heading-4',
+  'heading-5',
+  'stat',
+  'body-large',
+  'body',
+  'body-bold',
+  'body-small',
+  'caption',
+  'overline',
+  'button',
+  'link',
+  'label',
+  'data',
+  'data-small'
+);
+
+$-mono-styles: ('data', 'data-small');
+
+@mixin text($style) {
+  @if not list.index($text-styles, $style) {
+    @error 'Unknown text style `#{$style}`. The TOC styles are: #{$text-styles}.';
+  }
+
+  @if list.index($-mono-styles, $style) {
+    font-family: var(--font-family-mono);
+  } @else {
+    font-family: var(--font-family-sans);
+  }
+
+  font-size: var(--text-#{$style}-size);
+  font-weight: var(--text-#{$style}-weight);
+  line-height: var(--text-#{$style}-line-height);
+  letter-spacing: var(--text-#{$style}-tracking);
+  text-transform: var(--text-#{$style}-case);
+}

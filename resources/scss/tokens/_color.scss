@@ -1,0 +1,80 @@
+// --toc-* are primitives; components read only the semantic --color-*.
+
+:root {
+  // Primitives
+  --toc-navy-950: #01283c;
+  --toc-navy-900: #003755;
+  --toc-navy-700: #2e5670;
+  --toc-navy-500: #506775;
+  --toc-navy-300: #738793;
+  --toc-navy-200: #b3c2ca;
+  --toc-navy-100: #dde4e8;
+  --toc-navy-50: #f2f5f6;
+
+  --toc-cyan-700: #006e7d;
+  --toc-cyan-500: #01cbe1;
+  --toc-cyan-400: #33d5e7;
+  --toc-cyan-200: #99ebf3;
+  --toc-cyan-50: #e0f8fb;
+
+  --toc-gray-200: #eaeaea;
+  --toc-gray-50: #f7f8f9;
+  --toc-white: #ffffff;
+
+  --toc-green-700: #1b7247;
+  --toc-green-50: #e3f4ec;
+  --toc-orange-700: #9d4f00;
+  --toc-orange-50: #fff1df;
+  --toc-red-800: #8f1c22;
+  --toc-red-700: #b4232a;
+  --toc-red-50: #fde6e7;
+
+  // Text
+  --color-text-primary: var(--toc-navy-900);
+  --color-text-secondary: var(--toc-navy-500);
+  --color-text-link: var(--toc-cyan-700);
+  --color-text-disabled: var(--toc-navy-300);
+  --color-text-inverse: var(--toc-white);
+  --color-text-inverse-subtle: var(--toc-navy-200);
+  --color-text-inverse-accent: var(--toc-cyan-500);
+  // Navy on cyan (6.3:1). Never white on cyan (1.9:1).
+  --color-text-on-accent: var(--toc-navy-900);
+  --color-text-success: var(--toc-green-700);
+  --color-text-warning: var(--toc-orange-700);
+  --color-text-error: var(--toc-red-700);
+
+  // Backgrounds
+  --color-bg-page: var(--toc-gray-50);
+  --color-bg-surface: var(--toc-white);
+  --color-bg-subtle: var(--toc-navy-50);
+  --color-bg-input: var(--toc-gray-200);
+  --color-bg-inverse: var(--toc-navy-900);
+  --color-bg-inverse-deep: var(--toc-navy-950);
+  --color-bg-accent: var(--toc-cyan-500);
+  --color-bg-accent-hover: var(--toc-cyan-400);
+  --color-bg-accent-subtle: var(--toc-cyan-50);
+  --color-bg-primary: var(--toc-navy-900);
+  --color-bg-primary-hover: var(--toc-navy-700);
+  --color-bg-disabled: var(--toc-navy-100);
+  --color-bg-danger: var(--toc-red-700);
+  --color-bg-danger-hover: var(--toc-red-800);
+  --color-bg-danger-subtle: var(--toc-red-50);
+  // Darker than hover, so tags stay readable on a selected row.
+  --color-bg-selected: var(--toc-navy-100);
+  --color-bg-success: var(--toc-green-50);
+  --color-bg-warning: var(--toc-orange-50);
+  --color-bg-error: var(--toc-red-50);
+  --color-bg-info: var(--toc-cyan-50);
+
+  // Borders
+  --color-border-subtle: var(--toc-navy-100);
+  --color-border-strong: var(--toc-navy-300);
+  --color-border-primary: var(--toc-navy-900);
+  --color-border-accent: var(--toc-cyan-500);
+  --color-border-error: var(--toc-red-700);
+  --color-border-inverse: var(--toc-navy-700);
+
+  // Focus (keyboard only)
+  --color-focus-ring: var(--toc-navy-900);
+  --color-focus-ring-inverse: var(--toc-cyan-500);
+}

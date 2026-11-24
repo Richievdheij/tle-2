@@ -19,10 +19,7 @@
             autocomplete="current-password"
         />
 
-        <div class="checkbox">
-            <input class="checkbox__control" id="remember_me" type="checkbox" name="remember" @checked(old('remember'))>
-            <label class="checkbox__label" for="remember_me">{{ __('Remember me') }}</label>
-        </div>
+        <x-checkbox name="remember" id="remember_me" :label="__('Remember me')" />
 
         <div class="form__actions">
             @if (Route::has('password.request'))

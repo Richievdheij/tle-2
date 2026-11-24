@@ -6,8 +6,7 @@
     </p>
 </header>
 
-{{-- Its own form, submitted by a button inside the profile form through the
-     `form` attribute: forms cannot nest, and this one posts elsewhere. --}}
+{{-- Separate form (forms cannot nest), submitted by a button in the profile form via the `form` attribute. --}}
 <form id="send-verification" method="POST" action="{{ route('verification.send') }}">
     @csrf
 </form>

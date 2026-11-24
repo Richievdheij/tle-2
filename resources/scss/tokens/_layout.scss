@@ -1,0 +1,44 @@
+@use '../abstracts/breakpoints' as *;
+
+:root {
+  --container-max: 80rem; // 1280px
+  --form-max: 40rem; //       640px
+  --auth-max: 28rem; //       448px
+
+  --grid-columns: 4;
+  --grid-gutter: var(--spacing-md);
+  --page-margin: var(--spacing-lg);
+
+  --navbar-height: 5rem; // 80px
+  --menu-width: 15rem; //   240px
+  --search-width: 20rem; // 320px
+
+  --layer-raised: 1;
+  --layer-sticky: 10;
+  --layer-dropdown: 20;
+  --layer-overlay: 30;
+  --layer-dialog: 40;
+  --layer-skip-link: 50;
+
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  // WCAG 2.5.8 minimum target size.
+  --target-min: 1.5rem;
+}
+
+@include from('tablet') {
+  :root {
+    --grid-columns: 8;
+    --grid-gutter: var(--spacing-lg);
+    --page-margin: var(--spacing-2xl);
+  }
+}
+
+@include from('desktop') {
+  :root {
+    --grid-columns: 12;
+    --grid-gutter: var(--spacing-xl);
+    --page-margin: var(--spacing-6xl);
+  }
+}

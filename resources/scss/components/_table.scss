@@ -1,0 +1,235 @@
+@use '../abstracts' as *;
+
+// Content goes in `__cell-content`; the <td> itself must stay a table cell.
+
+.table {
+  --table-row-height: 4.5rem;
+  --table-header-height: var(--spacing-4xl);
+  --table-date-width: 6rem;
+  --table-date-height: 5.5rem;
+  --table-row-inset: var(--spacing-xs);
+  --table-line-gap: 2px;
+  --table-sort-gap: 6px;
+
+  max-inline-size: 100%;
+  overflow-x: auto;
+
+  &__table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  &__caption {
+    @include text('heading-5');
+
+    margin-block-end: var(--spacing-md);
+    color: var(--color-text-primary);
+    text-align: start;
+  }
+
+  // ─── Rows ─────────────────────────────────────────────────────────────────
+  &__row {
+    @include transition(background-color);
+
+    border-block-end: 1px solid var(--color-border-subtle);
+  }
+
+  &__body &__row:hover {
+    background-color: var(--color-bg-subtle);
+  }
+
+  // Selected rows (aria-selected) get a bar drawn inside the first cell.
+  &__body &__row[aria-selected='true'] {
+    background-color: var(--color-bg-selected);
+  }
+
+  &__row[aria-selected='true'] > &__cell:first-child {
+    box-shadow: inset 3px 0 0 var(--color-bg-primary);
+  }
+
+  // ─── Cells ────────────────────────────────────────────────────────────────
+  &__cell {
+    @include text('body');
+
+    block-size: var(--table-row-height);
+    padding: 0 var(--spacing-md);
+    color: var(--color-text-primary);
+    text-align: start;
+    vertical-align: middle;
+
+    // The row's own inset, at either end.
+    &:first-child {
+      padding-inline-start: calc(var(--spacing-md) + var(--table-row-inset));
+    }
+
+    &:last-child {
+      padding-inline-end: calc(var(--spacing-md) + var(--table-row-inset));
+    }
+  }
+
+  &__cell-content {
+    display: flex;
+    align-items: center;
+    min-inline-size: 0;
+  }
+
+  &__text {
+    min-inline-size: 0;
+  }
+
+  &__subtext {
+    @include text('body-small');
+
+    color: var(--color-text-secondary);
+  }
+
+  &__cell--header {
+    @include text('body-bold');
+
+    block-size: var(--table-header-height);
+  }
+
+  &__cell--two-line &__cell-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--table-line-gap);
+  }
+
+  &__cell--two-line &__text,
+  &__cell--event &__text,
+  &__person &__text {
+    @include text('body-bold');
+  }
+
+  &__cell--data {
+    @include text('data');
+  }
+
+  &__cell--action &__cell-content,
+  &__cell--menu &__cell-content,
+  &__cell--export &__cell-content {
+    justify-content: flex-end;
+  }
+
+  // An explicit alignment wins over the type's own.
+  &__cell--align-start &__cell-content {
+    justify-content: flex-start;
+  }
+
+  &__cell--align-center &__cell-content {
+    justify-content: center;
+  }
+
+  &__cell--align-end &__cell-content {
+    justify-content: flex-end;
+  }
+
+  &__cell--select {
+    inline-size: calc(var(--spacing-md) + var(--spacing-lg) + var(--table-row-inset));
+    padding-inline-end: 0;
+  }
+
+  &__cell--person &__cell-content {
+    gap: var(--spacing-sm);
+  }
+
+  &__person {
+    display: flex;
+    flex-direction: column;
+    gap: var(--table-line-gap);
+    min-inline-size: 0;
+  }
+
+  &__cell--event &__cell-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2xs);
+  }
+
+  &__event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  &__divider {
+    inline-size: 1px;
+    block-size: var(--spacing-sm);
+    background-color: var(--color-border-strong);
+  }
+
+  // ─── Column header (sorting) ──────────────────────────────────────────────
+  &__sort {
+    @include transition(color);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--table-sort-gap);
+    color: var(--color-text-primary);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-text-link);
+    }
+  }
+
+  &__sort-icon {
+    color: var(--color-text-secondary);
+  }
+
+  &__column-header.is-sorted &__sort,
+  &__column-header.is-sorted &__sort-icon {
+    color: var(--color-text-link);
+  }
+
+  // ─── Date cell ────────────────────────────────────────────────────────────
+  // A 2px timeline through the middle of the date block.
+  &__date-cell {
+    // In the first column the row's 8px inset sits before the 96px column.
+    --table-date-offset: 0px;
+
+    position: relative;
+    inline-size: calc(var(--table-date-width) + var(--table-date-offset));
+    block-size: var(--table-date-height);
+    padding: 0 0 0 var(--table-date-offset);
+
+    &:first-child {
+      --table-date-offset: var(--table-row-inset);
+
+      padding-inline-start: var(--table-date-offset);
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline-start: calc(var(--table-date-offset) + var(--table-date-width) / 2 - 1px);
+      inline-size: 2px;
+      block-size: 50%;
+      background-color: var(--color-border-subtle);
+    }
+
+    &::before {
+      inset-block-start: 0;
+    }
+
+    &::after {
+      inset-block-end: 0;
+    }
+
+    &--first::before,
+    &--last::after,
+    &--single::before,
+    &--single::after {
+      display: none;
+    }
+  }
+
+  &__date-cell &__cell-content {
+    position: relative;
+    z-index: var(--layer-raised);
+    justify-content: center;
+  }
+}

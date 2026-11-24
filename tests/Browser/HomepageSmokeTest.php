@@ -20,34 +20,35 @@ declare(strict_types=1);
  * Keep this file to ONE test. A browser suite that grows becomes the slow, flaky
  * part of the pipeline that people learn to re-run rather than read.
  */
-it('serves the homepage in Dutch with its built assets and a clean console', function (): void {
+it('serves the homepage in English with its built assets and a clean console', function (): void {
     $page = visit('/');
 
     $page
         // A browser exposes no status code, so 200 is asserted the way a browser
         // can: the real page is present and Laravel's error page is not.
-        // The Dutch button label rather than config('app.name'): the app name is
-        // whatever .env happens to say, while "Laravel-documentatie" (the source
-        // string has no hyphen) can only appear if lang/nl.json was actually
-        // loaded. It proves the locale end to end and it is a string rather than
-        // mixed, which the analyser is right to insist on.
-        ->assertSee('Laravel-documentatie')
+        // A navigation label rather than config('app.name'), which is whatever
+        // .env happens to say.
+        ->assertSee('Events')
         ->assertDontSee('Server Error')
         ->assertDontSee('Whoops')
 
-        // The rendered <html lang>. APP_LOCALE could be nl while the layout still
-        // emitted the fallback; only the served document settles that.
+        // The rendered <html lang>: only the served document proves the locale.
         //
         // Read through the DOM rather than assertAttribute('html', ...): the
         // element-locator helper does not resolve a bare `html` selector and waits
         // five seconds for something that is already there.
-        ->assertScript('document.documentElement.lang', 'nl')
+        ->assertScript('document.documentElement.lang', 'en')
 
         // The compiled SCSS did not just get LINKED, it got APPLIED. A missing Vite
         // manifest entry renders a <link> to a 404 and every token falls back to
         // empty, which no server-side assertion and no HTML snapshot would notice.
-        ->assertScript("getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim()", '#2f6feb')
+        // The accent is the Figma variable bg/accent, cyan/500.
+        ->assertScript("getComputedStyle(document.documentElement).getPropertyValue('--color-bg-accent').trim()", '#01cbe1')
         ->assertScript('document.styleSheets.length > 0')
+
+        // The self-hosted Figtree actually loaded: a font file that 404s leaves the
+        // fallback stack in place, and the page still "works".
+        ->assertScript("document.fonts.load('600 16px Figtree').then((faces) => faces.length > 0)")
 
         // The header and the content fill the first screen and the footer starts
         // below it — a layout rule only a rendered page with real CSS can show.

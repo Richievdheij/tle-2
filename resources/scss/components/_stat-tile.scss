@@ -1,0 +1,28 @@
+@use '../abstracts' as *;
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-surface);
+  box-shadow: var(--shadow-ring);
+  color: var(--color-text-primary);
+
+  &__label {
+    @include text('overline');
+
+    color: var(--color-text-link);
+  }
+
+  &__value {
+    @include text('stat');
+  }
+
+  &__note {
+    @include text('body-small');
+
+    color: var(--color-text-secondary);
+  }
+}

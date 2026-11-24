@@ -1,0 +1,22 @@
+:root {
+  --duration-instant: 100ms;
+  --duration-fast: 120ms;
+  --duration-base: 150ms;
+  --duration-moderate: 200ms;
+  --duration-slow: 250ms;
+  --duration-slower: 300ms;
+
+  --easing-out: cubic-bezier(0, 0, 0.58, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 1ms;
+    --duration-fast: 1ms;
+    --duration-base: 1ms;
+    --duration-moderate: 1ms;
+    --duration-slow: 1ms;
+    --duration-slower: 1ms;
+    --zoom-card-hover: 1;
+  }
+}

@@ -1,0 +1,19 @@
+@use '../abstracts' as *;
+
+.footer-link {
+  @include text('body');
+  @include transition(color);
+
+  color: var(--color-text-inverse);
+  text-decoration: none;
+
+  @include focus-ring('inverse');
+
+  &[href]:hover {
+    color: var(--color-text-inverse-accent);
+  }
+
+  &--small {
+    @include text('body-small');
+  }
+}

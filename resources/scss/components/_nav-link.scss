@@ -1,0 +1,42 @@
+@use '../abstracts' as *;
+
+.nav-link {
+  @include text('body-bold');
+  @include transition(color, var(--duration-base));
+
+  position: relative;
+  display: inline-flex;
+  padding: var(--spacing-xs) var(--spacing-2xs);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &::after {
+    @include transition(background-color, var(--duration-base));
+
+    position: absolute;
+    inset-inline: var(--spacing-2xs);
+    // 4px below the label, so the label itself stays vertically centred.
+    inset-block-end: calc(var(--spacing-xs) - var(--spacing-2xs) - 2px);
+    block-size: 2px;
+    background-color: transparent;
+    content: '';
+  }
+
+  &[href]:hover {
+    color: var(--color-text-link);
+
+    &::after {
+      background-color: var(--color-border-subtle);
+    }
+  }
+
+  &.is-active,
+  &.is-active:hover {
+    color: var(--color-text-primary);
+
+    &::after {
+      background-color: var(--color-bg-accent);
+    }
+  }
+}
