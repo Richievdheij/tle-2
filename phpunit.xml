@@ -36,9 +36,8 @@
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
-        <!-- Pinned so the suite proves the Dutch locale rather than inheriting
-             whatever a given developer happens to have in .env. -->
-        <env name="APP_LOCALE" value="nl"/>
+        <!-- Pinned so the suite does not inherit a developer's .env locale. -->
+        <env name="APP_LOCALE" value="en"/>
         <env name="APP_FALLBACK_LOCALE" value="en"/>
         <env name="APP_TIMEZONE" value="Europe/Amsterdam"/>
         <env name="BCRYPT_ROUNDS" value="4"/>

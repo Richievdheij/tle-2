@@ -24,8 +24,8 @@ directives and `{{ }}` expressions as if they were HTML. `make build` runs
 - **No `env()` in a template.** `make checks` refuses it. Use `config()`.
 - **`{{ }}`, never `{!! !!}`**, unless you can name the sanitiser that ran first.
 - **Every route reference is `route('name')`**, never a literal path.
-- **User-facing text goes through `__()`**, with the Dutch string in
-  `lang/nl.json`. The application runs `nl` with an `en` fallback.
+- **User-facing text is English and goes through `__()`**, so a translation
+  can be added later without touching the template.
 - **`@csrf` in every POST form.** Its absence is a 419 that reads like a routing
   bug.
 

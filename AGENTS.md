@@ -55,11 +55,10 @@ never a path-based one.
 
 ## Locale
 
-The app runs `nl` with an `en` fallback, in `Europe/Amsterdam`. User-facing text
-goes through `__('English source string')`; the Dutch translation lives in
-`lang/nl.json` and `lang/en.json` holds the same keys. A test asserts the two
-match in both directions, so a string added to one and forgotten in the other
-fails the build. Never hardcode Dutch in a template.
+The platform is English only, in `Europe/Amsterdam`. User-facing text is
+written in English and goes through `__('…')`, so a translation can be added
+later (`php artisan lang:publish` plus a `lang/<locale>.json`) without touching
+a template.
 
 ## More
 

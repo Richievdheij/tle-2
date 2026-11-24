@@ -33,6 +33,6 @@ it('does not confirm a wrong password', function (): void {
     ]);
 
     $response
-        ->assertSessionHasErrors(['password' => 'Het opgegeven wachtwoord is onjuist.'])
+        ->assertSessionHasErrors(['password' => 'The provided password is incorrect.'])
         ->assertSessionMissing('auth.password_confirmed_at');
 });

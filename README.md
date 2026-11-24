@@ -180,7 +180,6 @@ dependency.
 | `app/Http/Controllers/Auth/`              | One controller per flow                      |
 | `app/Http/Requests/Auth/LoginRequest.php` | Login, rate-limited to five attempts         |
 | `resources/views/auth/`, `profile/`       | The pages, on the guest and app layouts      |
-| `lang/{en,nl}/*.php`, `lang/{en,nl}.json` | Every message, including the mails, in both  |
 
 ### Turning on email verification
 
