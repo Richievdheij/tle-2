@@ -19,6 +19,10 @@ about the toolchain again.
 Klaar. Inloggen kan met `test@example.com` / `password`.
 Geen Herd? Draai `php artisan serve` en open `http://localhost:8000`.
 
+De database is MySQL (`tle_2`); `composer run setup` maakt hem aan. Bekijk hem
+in phpMyAdmin op <http://phpmyadmin.test> (gebruiker `root`, geen wachtwoord).
+Draait MySQL bij jou met een wachtwoord, zet het dan in `DB_PASSWORD` in `.env`.
+
 Alleen de site toevoegen in de Herd-app is niet genoeg: zonder
 `composer run setup` zijn er geen `.env`, database en CSS, en krijg je een
 foutpagina.
@@ -45,8 +49,8 @@ composer run setup        # or: make install
 ```
 
 That one command installs the PHP and frontend dependencies, creates `.env` with
-an application key, lets Herd serve the folder, migrates and seeds the SQLite
-database, builds the CSS and JavaScript, and arms the git hooks. It ends by
+an application key, lets Herd serve the folder, creates, migrates and seeds the
+MySQL database, builds the CSS and JavaScript, and arms the git hooks. It ends by
 printing the URL to open. Running it again is safe.
 
 ### Opening the site
@@ -134,6 +138,7 @@ The full model, including hotfixes and how two people share one branch, is in
 | Composer | 2.x     |                                                            |
 | Node     | 24      | The version is in [.nvmrc](.nvmrc)                         |
 | npm      | 11+     |                                                            |
+| MySQL    | 8.4+    | On `127.0.0.1:3306`, user `root` without a password        |
 | make     | 3.81+   | Optional. macOS ships it; on Windows see below             |
 
 **Windows.** The Laravel commands above work natively, with Herd for Windows or

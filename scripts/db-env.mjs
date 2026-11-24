@@ -33,6 +33,8 @@ const resolve = (key, fallback) => {
 /** Single-quote for the shell, escaping any embedded quote. A password may contain anything. */
 const quote = (value) => `'${String(value).replace(/'/g, `'\\''`)}'`
 
+const testDatabase = (name) => (name.endsWith('_testing') ? name : `${name}_testing`)
+
 const values = {
   // Read by tests/Feature/DatabaseConnectionTest.php. Deliberately not declared
   // in phpunit.xml, so it arrives from here and nowhere else.
@@ -40,7 +42,8 @@ const values = {
   DB_CONNECTION: 'mysql',
   DB_HOST: resolve('DB_HOST', '127.0.0.1'),
   DB_PORT: resolve('DB_PORT', '3306'),
-  DB_DATABASE: resolve('DB_DATABASE', 'laravel_starter_template'),
+  // Its own database, never the one you develop in: the suite wipes it.
+  DB_DATABASE: testDatabase(resolve('DB_DATABASE', 'tle_2')),
   DB_USERNAME: resolve('DB_USERNAME', 'root'),
   DB_PASSWORD: resolve('DB_PASSWORD', ''),
 }

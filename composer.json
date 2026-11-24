@@ -54,8 +54,7 @@
       "git config commit.template .gitmessage",
       "node scripts/herd.mjs",
       "node scripts/env.mjs local",
-      "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-      "@php artisan migrate --seed --no-interaction",
+      "@php artisan migrate --seed --force",
       "npm run build",
       "node scripts/site.mjs"
     ],
