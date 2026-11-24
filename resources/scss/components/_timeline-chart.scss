@@ -1,0 +1,247 @@
+@use '../abstracts' as *;
+
+// Bars or lines is a pair of radios; :has() swaps the views, so it is CSS only.
+
+.timeline-chart {
+  --timeline-plot-height: 10.75rem;
+  --timeline-scale-height: 10rem; // the highest value
+  --timeline-column-gap: 14px;
+  --timeline-track-inset: 3px; // padding and corners
+  --timeline-dot-size: var(--spacing-xs);
+  --timeline-line-width: 2.5px;
+  --timeline-swatch-size: 10px;
+  --timeline-tight-gap: 2px;
+  --timeline-segment-inline: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-surface);
+  box-shadow: var(--shadow-ring);
+
+  // ─── Header ───────────────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--timeline-tight-gap);
+  }
+
+  &__title {
+    @include text('heading-5');
+  }
+
+  &__period {
+    color: var(--color-text-secondary);
+  }
+
+  &__switches {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  &__segments,
+  &__types {
+    display: flex;
+    gap: var(--timeline-tight-gap);
+    margin: 0;
+    padding: var(--timeline-track-inset);
+    border: 0;
+    border-radius: var(--timeline-track-inset);
+    background-color: var(--color-bg-subtle);
+  }
+
+  &__segment {
+    @include text('body-bold');
+    @include transition((background-color, color, box-shadow));
+
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--timeline-segment-inline);
+    border-radius: var(--radius-xs);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+
+    &[href]:hover {
+      color: var(--color-text-primary);
+    }
+
+    &.is-active {
+      background-color: var(--color-bg-surface);
+      color: var(--color-text-primary);
+      box-shadow: var(--shadow-ring);
+    }
+  }
+
+  &__type-input {
+    @include visually-hidden;
+  }
+
+  &__type {
+    @include transition((background-color, box-shadow), var(--duration-moderate));
+
+    display: grid;
+    place-items: center;
+    inline-size: var(--spacing-3xl);
+    block-size: var(--spacing-3xl);
+    border-radius: var(--radius-xs);
+    color: var(--color-text-primary);
+    cursor: pointer;
+  }
+
+  &__type-input:checked + &__type {
+    background-color: var(--color-bg-surface);
+    box-shadow: var(--shadow-ring);
+  }
+
+  &__type-input:focus-visible + &__type {
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  // ─── Legend ───────────────────────────────────────────────────────────────
+  &__legend {
+    @include text('body-small');
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs) var(--spacing-lg);
+    color: var(--color-text-primary);
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  &__swatch {
+    inline-size: var(--timeline-swatch-size);
+    block-size: var(--timeline-swatch-size);
+    border-radius: var(--radius-xs);
+    background-color: var(--series);
+  }
+
+  // ─── Plot ─────────────────────────────────────────────────────────────────
+  // Half the gap either side, so a column's centre is where the line puts its dot.
+  &__plot {
+    position: relative;
+    block-size: var(--timeline-plot-height);
+  }
+
+  &__bars,
+  &__days {
+    display: grid;
+    grid-template-columns: repeat(var(--days), minmax(0, 1fr));
+  }
+
+  &__bars {
+    block-size: 100%;
+    border-block-end: 1px solid var(--color-border-subtle);
+  }
+
+  &__column {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    gap: var(--timeline-tight-gap);
+    padding-inline: calc(var(--timeline-column-gap) / 2);
+  }
+
+  &__bar {
+    block-size: calc(var(--value) * var(--timeline-scale-height));
+    border-start-start-radius: var(--radius-xs);
+    border-start-end-radius: var(--radius-xs);
+    background-color: var(--series);
+  }
+
+  &__lines {
+    position: absolute;
+    inset: 0;
+    display: none;
+  }
+
+  &:has(&__type-input[value='lines']:checked) &__bars {
+    visibility: hidden;
+  }
+
+  &:has(&__type-input[value='lines']:checked) &__lines {
+    display: block;
+  }
+
+  &__svg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+  }
+
+  &__grid {
+    stroke: var(--color-border-subtle);
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  &__line {
+    fill: none;
+    stroke: var(--series);
+    stroke-width: var(--timeline-line-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  &__dot {
+    position: absolute;
+    inline-size: var(--timeline-dot-size);
+    block-size: var(--timeline-dot-size);
+    border: 2px solid var(--color-bg-surface);
+    border-radius: var(--radius-full);
+    background-color: var(--series);
+    transform: translate(-50%, -50%);
+  }
+
+  // ─── Days ─────────────────────────────────────────────────────────────────
+  &__day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--timeline-tight-gap);
+    padding-inline: calc(var(--timeline-column-gap) / 2);
+    text-align: center;
+  }
+
+  &__weekday {
+    @include text('caption');
+
+    color: var(--color-text-secondary);
+  }
+
+  &__date {
+    @include text('body-bold');
+
+    padding: var(--timeline-tight-gap) var(--spacing-xs);
+    border-radius: var(--radius-xs);
+    color: var(--color-text-primary);
+    white-space: nowrap;
+  }
+
+  &__day.is-highlighted &__weekday {
+    color: var(--color-text-link);
+  }
+
+  &__day.is-highlighted &__date {
+    background-color: var(--color-bg-accent-subtle);
+  }
+}

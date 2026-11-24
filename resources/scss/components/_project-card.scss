@@ -1,0 +1,211 @@
+@use '../abstracts' as *;
+
+// The scrims are two layers that cross-fade: a gradient cannot be transitioned.
+
+.project-card {
+  --project-card-media-height: 13.75rem;
+
+  @include transition(box-shadow, var(--duration-slower));
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-surface);
+  box-shadow: var(--shadow-ring);
+
+  &:hover {
+    box-shadow: var(--shadow-ring-hover);
+  }
+
+  // Keyboard focus lands on the title link; the ring goes round the card.
+  &:has(.project-card__link:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  // ─── Photo ────────────────────────────────────────────────────────────────
+  &__media {
+    position: relative;
+    flex: none;
+    block-size: var(--project-card-media-height);
+    overflow: hidden;
+    background-color: var(--color-border-strong);
+
+    &::before,
+    &::after {
+      @include transition(opacity, var(--duration-slower));
+
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    &::before {
+      background-image: var(--scrim-card);
+    }
+
+    &::after {
+      background-image: var(--scrim-card-hover);
+      opacity: 0;
+    }
+  }
+
+  &__photo {
+    @include transition(transform, var(--duration-slower));
+
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  &:hover &__photo {
+    transform: scale(var(--zoom-card-hover));
+  }
+
+  &:hover &__media::before {
+    opacity: 0;
+  }
+
+  &:hover &__media::after {
+    opacity: 1;
+  }
+
+  // ─── Content ──────────────────────────────────────────────────────────────
+  &__content > :has(+ .project-card__cta) {
+    margin-block-end: var(--spacing-md);
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xl);
+  }
+
+  &__tag {
+    display: flex;
+  }
+
+  &__title {
+    @include text('heading-5');
+    @include transition(color, var(--duration-slower));
+
+    align-self: stretch;
+    color: var(--color-text-primary);
+  }
+
+  &:hover &__title {
+    color: var(--color-text-link);
+  }
+
+  // The stretched link: its hit area covers the whole card.
+  &__link {
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: var(--layer-raised);
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  &__description {
+    @include text('body-small');
+
+    color: var(--color-text-secondary);
+  }
+
+  // ─── Progress ─────────────────────────────────────────────────────────────
+  &__progress {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    align-self: stretch;
+  }
+
+  &__bar {
+    display: block;
+    inline-size: 100%;
+    block-size: var(--spacing-xs);
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-disabled);
+    color: var(--color-bg-accent);
+    appearance: none;
+
+    &::-webkit-progress-bar {
+      background-color: var(--color-bg-disabled);
+    }
+
+    &::-webkit-progress-value {
+      border-radius: var(--radius-full);
+      background-color: var(--color-bg-accent);
+    }
+
+    &::-moz-progress-bar {
+      border-radius: var(--radius-full);
+      background-color: var(--color-bg-accent);
+    }
+  }
+
+  &__amounts {
+    @include text('data-small');
+
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+
+  &__raised {
+    color: var(--color-text-primary);
+  }
+
+  &__goal {
+    color: var(--color-text-secondary);
+  }
+
+  // The arrow link's look, without nesting a second link.
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    // Pinned to the bottom, so the links line up across a row of cards.
+    margin-block-start: auto;
+    padding: var(--spacing-2xs) var(--spacing-xs) var(--spacing-2xs) var(--spacing-2xs);
+    border-radius: var(--radius-xs);
+  }
+
+  &__circle {
+    @include transition(background-color, var(--duration-moderate));
+
+    display: grid;
+    place-items: center;
+    inline-size: var(--spacing-2xl);
+    block-size: var(--spacing-2xl);
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-accent);
+    color: var(--color-text-on-accent);
+  }
+
+  &:hover &__circle {
+    background-color: var(--color-bg-accent-hover);
+  }
+
+  &__cta-label {
+    @include text('link');
+
+    color: var(--color-text-primary);
+  }
+}

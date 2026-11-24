@@ -1,0 +1,31 @@
+@use '../abstracts' as *;
+
+.tooltip {
+  @include text('body-small');
+  @include transition((opacity, visibility));
+
+  position: absolute;
+  inset-block-end: calc(100% + var(--spacing-xs));
+  inset-inline-start: 50%;
+  z-index: var(--layer-dropdown);
+  padding: var(--spacing-2xs) var(--spacing-xs);
+  border-radius: var(--radius-xs);
+  background-color: var(--color-bg-inverse);
+  color: var(--color-text-inverse);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  translate: -50% 0;
+
+  &--bottom {
+    inset-block: calc(100% + var(--spacing-xs)) auto;
+  }
+}
+
+// Not when disabled, nor after Escape (tooltip.js sets data-tooltip-dismissed).
+:where(:hover, :focus-visible):not(:disabled, [aria-disabled='true'], [data-tooltip-dismissed])
+  > .tooltip {
+  opacity: 1;
+  visibility: visible;
+}

@@ -1,32 +1,33 @@
 @use '../abstracts' as *;
 
-// A raised surface holding one unit of content: the guest card, a dashboard
-// panel, each section of the profile page.
+// A white panel for one unit of content.
 
 .card {
-  padding: var(--space-m);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-m);
-  background-color: var(--color-surface);
-  box-shadow: var(--shadow-s);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-surface);
+  box-shadow: var(--shadow-ring);
 
-  @include from('m') {
-    padding: var(--space-l);
+  @include from('tablet') {
+    padding: var(--spacing-2xl);
   }
 
   &__header {
-    margin-block-end: var(--space-m);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xs);
+    margin-block-end: var(--spacing-xl);
   }
 
   &__title {
-    margin-block-end: var(--space-2xs);
-    font-size: var(--text-l);
+    @include text('heading-5');
   }
 
   &__intro {
-    margin-block-end: var(--space-m);
-    color: var(--color-text-muted);
-    font-size: var(--text-s);
+    @include text('body-small');
+
+    margin-block-end: var(--spacing-xl);
+    color: var(--color-text-secondary);
   }
 
   &__header &__intro {
@@ -34,10 +35,11 @@
   }
 
   &__footer {
-    margin-block-start: var(--space-m);
-    padding-block-start: var(--space-s);
-    border-block-start: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-    font-size: var(--text-s);
+    @include text('body-small');
+
+    margin-block-start: var(--spacing-xl);
+    padding-block-start: var(--spacing-md);
+    border-block-start: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
   }
 }

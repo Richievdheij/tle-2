@@ -1,0 +1,45 @@
+@use '../abstracts' as *;
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+  inline-size: var(--menu-width);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-surface);
+  box-shadow: var(--shadow-menu);
+
+  &__user {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    overflow-wrap: anywhere;
+  }
+
+  &__name {
+    @include text('body-bold');
+
+    color: var(--color-text-primary);
+  }
+
+  &__email {
+    @include text('body-small');
+
+    color: var(--color-text-secondary);
+  }
+
+  &__divider {
+    flex: none;
+    block-size: 1px;
+    margin: 0;
+    border: 0;
+    background-color: var(--color-border-subtle);
+  }
+
+  // A <form> around a menu item (log out) must not add space of its own.
+  form {
+    display: contents;
+  }
+}

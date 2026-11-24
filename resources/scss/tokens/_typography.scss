@@ -1,0 +1,137 @@
+@use '../abstracts/breakpoints' as *;
+
+// Each text style is five properties: size, line-height, weight, tracking (em) and case.
+
+:root {
+  --font-family-sans: 'Figtree', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
+  --font-family-mono: 'Roboto Mono', ui-monospace, sfmono-regular, menlo, monospace;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+
+  --text-display-size: 4rem;
+  --text-display-line-height: 4rem;
+  --text-display-weight: var(--font-weight-light);
+  --text-display-tracking: -0.035em;
+  --text-display-case: uppercase;
+
+  --text-heading-1-size: 3rem;
+  --text-heading-1-line-height: 3.25rem;
+  --text-heading-1-weight: var(--font-weight-semibold);
+  --text-heading-1-tracking: -0.02em;
+  --text-heading-1-case: uppercase;
+
+  --text-heading-2-size: 2.25rem;
+  --text-heading-2-line-height: 2.5rem;
+  --text-heading-2-weight: var(--font-weight-semibold);
+  --text-heading-2-tracking: -0.015em;
+  --text-heading-2-case: uppercase;
+
+  --text-heading-3-size: 1.75rem;
+  --text-heading-3-line-height: 2rem;
+  --text-heading-3-weight: var(--font-weight-regular);
+  --text-heading-3-tracking: -0.02em;
+  --text-heading-3-case: none;
+
+  --text-heading-4-size: 1.375rem;
+  --text-heading-4-line-height: 1.75rem;
+  --text-heading-4-weight: var(--font-weight-semibold);
+  --text-heading-4-tracking: -0.01em;
+  --text-heading-4-case: none;
+
+  --text-heading-5-size: 1.125rem;
+  --text-heading-5-line-height: 1.5rem;
+  --text-heading-5-weight: var(--font-weight-semibold);
+  --text-heading-5-tracking: 0;
+  --text-heading-5-case: none;
+
+  --text-stat-size: 2.5rem;
+  --text-stat-line-height: 2.75rem;
+  --text-stat-weight: var(--font-weight-light);
+  --text-stat-tracking: -0.03em;
+  --text-stat-case: none;
+
+  --text-body-large-size: 1.125rem;
+  --text-body-large-line-height: 1.75rem;
+  --text-body-large-weight: var(--font-weight-regular);
+  --text-body-large-tracking: 0;
+  --text-body-large-case: none;
+
+  --text-body-size: 1rem;
+  --text-body-line-height: 1.5rem;
+  --text-body-weight: var(--font-weight-regular);
+  --text-body-tracking: 0;
+  --text-body-case: none;
+
+  --text-body-bold-size: 1rem;
+  --text-body-bold-line-height: 1.5rem;
+  --text-body-bold-weight: var(--font-weight-semibold);
+  --text-body-bold-tracking: 0;
+  --text-body-bold-case: none;
+
+  --text-body-small-size: 0.875rem;
+  --text-body-small-line-height: 1.25rem;
+  --text-body-small-weight: var(--font-weight-regular);
+  --text-body-small-tracking: 0;
+  --text-body-small-case: none;
+
+  --text-caption-size: 0.75rem;
+  --text-caption-line-height: 1rem;
+  --text-caption-weight: var(--font-weight-regular);
+  --text-caption-tracking: 0;
+  --text-caption-case: none;
+
+  --text-overline-size: 0.75rem;
+  --text-overline-line-height: 1rem;
+  --text-overline-weight: var(--font-weight-semibold);
+  --text-overline-tracking: 0.08em;
+  --text-overline-case: uppercase;
+
+  --text-button-size: 0.875rem;
+  --text-button-line-height: 1rem;
+  --text-button-weight: var(--font-weight-semibold);
+  --text-button-tracking: 0.06em;
+  --text-button-case: uppercase;
+
+  --text-link-size: 1.125rem;
+  --text-link-line-height: 1.5rem;
+  --text-link-weight: var(--font-weight-semibold);
+  --text-link-tracking: 0;
+  --text-link-case: none;
+
+  --text-label-size: 0.875rem;
+  --text-label-line-height: 1.25rem;
+  --text-label-weight: var(--font-weight-semibold);
+  --text-label-tracking: 0;
+  --text-label-case: none;
+
+  --text-data-size: 0.875rem;
+  --text-data-line-height: 1.25rem;
+  --text-data-weight: var(--font-weight-regular);
+  --text-data-tracking: 0;
+  --text-data-case: none;
+
+  --text-data-small-size: 0.75rem;
+  --text-data-small-line-height: 1rem;
+  --text-data-small-weight: var(--font-weight-regular);
+  --text-data-small-tracking: 0;
+  --text-data-small-case: none;
+
+  // About 70 characters.
+  --measure: 40rem;
+}
+
+// The four largest styles step down on mobile so an uppercase H1 fits 360px.
+@include until('tablet') {
+  :root {
+    --text-display-size: 2.5rem;
+    --text-display-line-height: 2.75rem;
+    --text-heading-1-size: 2rem;
+    --text-heading-1-line-height: 2.25rem;
+    --text-heading-2-size: 1.75rem;
+    --text-heading-2-line-height: 2rem;
+    --text-stat-size: 2rem;
+    --text-stat-line-height: 2.25rem;
+  }
+}

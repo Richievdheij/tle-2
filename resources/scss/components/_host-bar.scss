@@ -1,0 +1,32 @@
+@use '../abstracts' as *;
+
+.host-bar {
+  padding-block: var(--spacing-sm);
+  background-color: var(--color-bg-inverse-deep);
+  color: var(--color-text-inverse);
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-2xs) var(--spacing-xl);
+  }
+
+  &__notification {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--spacing-sm);
+  }
+
+  &__title {
+    @include text('body-bold');
+  }
+
+  &__note {
+    @include text('body-small');
+
+    color: var(--color-text-inverse-subtle);
+  }
+}

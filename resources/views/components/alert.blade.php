@@ -1,36 +1,43 @@
 {{--
-    <x-alert variant="success" :title="__('Done')">Message</x-alert>
+    Alert: a tinted message with a title, text and a close button.
 
-    `role` is passed through by the caller rather than derived from the variant,
-    because the two are different questions: `success`/`danger` is what it looks
-    like, `status`/`alert` is how urgently a screen reader should interrupt.
+    <x-alert tone="success" :title="__('Change saved')">{{ __('Your monthly gift is now €15.00.') }}</x-alert>
 
-    Props — Blade has no typed props, so this block IS the contract. `@props`
-    carries names and defaults only; the compiler never checks a type.
-
-      string|null $variant      success | danger. null renders the base block.
-      string|null $title        bold first line; omit for a body-only message
-      bool        $dismissible  renders the close button and its sr-only label
-
-    Styles: resources/scss/components/_alert.scss
+    Props: tone: info|success|warning|error, title, dismissible (default true; closed by resources/js/app.js), variant: success|danger (legacy alias for tone).
+    Role follows the tone (alert for error/warning, status otherwise) unless you pass role.
 --}}
 @props([
+    'tone' => null,
     'variant' => null,
     'title' => null,
     'dismissible' => true,
 ])
 
-<div {{ $attributes->class(['alert', $variant ? 'alert--'.$variant : null]) }}>
-    @if ($title)
-        <p class="alert__title">{{ $title }}</p>
-    @endif
+@php
+    $tone ??= match ($variant) {
+        'danger' => 'error',
+        null => 'info',
+        default => $variant,
+    };
 
-    <div class="alert__body">{{ $slot }}</div>
+    $role = $attributes->get('role', in_array($tone, ['error', 'warning'], true) ? 'alert' : 'status');
+@endphp
+
+<div {{ $attributes->except('role')->class(['alert', 'alert--'.$tone]) }} role="{{ $role }}">
+    <div class="alert__body">
+        @if ($title)
+            <p class="alert__title">{{ $title }}</p>
+        @endif
+
+        <div class="alert__text">{{ $slot }}</div>
+    </div>
 
     @if ($dismissible)
-        <button class="button button--ghost" type="button" data-dismiss="alert">
-            <span class="sr-only">{{ __('Dismiss') }}</span>
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <div class="alert__action">
+            <button class="alert__close" type="button" data-dismiss="alert">
+                <x-icon name="close" />
+                <span class="sr-only">{{ __('Dismiss') }}</span>
+            </button>
+        </div>
     @endif
 </div>

@@ -1,0 +1,33 @@
+@use '../abstracts' as *;
+
+// Selected follows the checkbox (:has(:checked)), so it works without JavaScript.
+
+.host-row {
+  @include transition(background-color);
+
+  border-block-end: 1px solid var(--color-border-subtle);
+
+  &:hover {
+    background-color: var(--color-bg-subtle);
+  }
+
+  &:has([data-host-row-select]:checked),
+  &[aria-selected='true'] {
+    background-color: var(--color-bg-selected);
+  }
+
+  // The selected bar is drawn inside the first cell, so the <tr> needs no positioning.
+  &__select {
+    @include transition(box-shadow);
+  }
+
+  &:has([data-host-row-select]:checked) &__select,
+  &[aria-selected='true'] &__select {
+    box-shadow: inset 3px 0 0 var(--color-bg-primary);
+  }
+
+  // A click anywhere on the row toggles it (host-row.js).
+  &[data-host-row-ready] {
+    cursor: pointer;
+  }
+}

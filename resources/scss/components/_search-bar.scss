@@ -1,0 +1,120 @@
+@use '../abstracts' as *;
+
+// Open on :focus-within, while it holds text, or with `--open`; no JavaScript needed.
+
+.search-bar {
+  --search-bar-height: calc(var(--spacing-3xl) + var(--spacing-2xs));
+
+  @include transition((inline-size, background-color, border-color), var(--duration-slow));
+
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--spacing-xs);
+  inline-size: var(--search-bar-height);
+  block-size: var(--search-bar-height);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  background-color: transparent;
+  color: var(--color-text-primary);
+
+  &:hover {
+    background-color: var(--color-bg-subtle);
+  }
+
+  &__toggle {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: calc(var(--search-bar-height) - 2px);
+    block-size: 100%;
+    cursor: pointer;
+  }
+
+  // Closed, the input takes no space but stays focusable, so Tab opens the bar.
+  &__input {
+    @include text('body-small');
+
+    flex: 1;
+    inline-size: 0;
+    min-inline-size: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-text-primary);
+    opacity: 0;
+    appearance: none;
+
+    &::placeholder {
+      color: var(--color-text-secondary);
+      opacity: 1;
+    }
+
+    // Hide the native clear button; ours is the close button.
+    &::-webkit-search-cancel-button {
+      appearance: none;
+    }
+
+    // The focus ring belongs on the whole bar (below), not the bare input.
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  &__close {
+    @include button-reset;
+    @include transition(background-color);
+
+    display: none;
+    flex: none;
+    place-items: center;
+    inline-size: var(--spacing-xl);
+    block-size: var(--spacing-xl);
+    border-radius: var(--radius-xs);
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background-color: var(--color-bg-subtle);
+    }
+  }
+
+  &:focus-within,
+  &:has(&__input:not(:placeholder-shown)),
+  &--open {
+    inline-size: var(--search-width);
+    max-inline-size: 100%;
+    padding-inline: calc(var(--spacing-md) - 1px) calc(var(--spacing-sm) - 1px);
+    border-color: var(--color-border-primary);
+    background-color: var(--color-bg-surface);
+  }
+
+  &:focus-within &__toggle,
+  &:has(&__input:not(:placeholder-shown)) &__toggle,
+  &--open &__toggle {
+    inline-size: auto;
+    color: var(--color-text-secondary);
+  }
+
+  &:focus-within &__input,
+  &:has(&__input:not(:placeholder-shown)) &__input,
+  &--open &__input {
+    opacity: 1;
+  }
+
+  &:focus-within &__close,
+  &:has(&__input:not(:placeholder-shown)) &__close,
+  &--open &__close {
+    display: grid;
+  }
+
+  &:has(&__input:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  &--open {
+    inline-size: 100%;
+  }
+}

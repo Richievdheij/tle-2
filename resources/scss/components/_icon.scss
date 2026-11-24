@@ -1,0 +1,29 @@
+@use '../abstracts' as *;
+
+// Size comes from the SVG's own attributes, colour from currentColor.
+
+.icon {
+  flex: none;
+  vertical-align: middle;
+
+  // Keep the 2px stroke at 24px instead of scaling it to 3px.
+  &--24 :where(path, circle, rect, line, polyline) {
+    vector-effect: non-scaling-stroke;
+  }
+
+  &--spinner {
+    animation: icon-spin 0.8s linear infinite;
+  }
+}
+
+@keyframes icon-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon--spinner {
+    animation-duration: 2.4s;
+  }
+}

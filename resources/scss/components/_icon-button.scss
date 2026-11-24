@@ -1,0 +1,53 @@
+@use '../abstracts' as *;
+
+.icon-button {
+  --icon-button-bg-hover: var(--color-bg-subtle);
+  --icon-button-fg: var(--color-text-primary);
+  --icon-button-border: transparent;
+
+  @include button-reset;
+  @include transition((background-color, color, box-shadow));
+
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--spacing-3xl);
+  block-size: var(--spacing-3xl);
+  border-radius: var(--radius-xs);
+  color: var(--icon-button-fg);
+  text-decoration: none;
+
+  // An inset shadow, so the border stays inside the 40px.
+  box-shadow: inset 0 0 0 1px var(--icon-button-border);
+
+  &:hover {
+    background-color: var(--icon-button-bg-hover);
+  }
+
+  &--secondary {
+    --icon-button-bg-hover: var(--color-bg-accent-subtle);
+    --icon-button-border: var(--color-border-primary);
+  }
+
+  &--danger {
+    --icon-button-bg-hover: var(--color-bg-danger-subtle);
+    --icon-button-fg: var(--color-text-error);
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    --icon-button-fg: var(--color-text-disabled);
+
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  &--secondary:disabled,
+  &--secondary[aria-disabled='true'] {
+    --icon-button-border: var(--color-text-disabled);
+  }
+}

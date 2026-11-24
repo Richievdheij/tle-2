@@ -1,0 +1,23 @@
+@use '../abstracts' as *;
+
+.participants {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-2xs) / 2);
+  color: var(--color-text-primary);
+
+  &__count {
+    @include text('body');
+  }
+
+  &__status {
+    @include text('body-small');
+
+    color: var(--color-text-secondary);
+  }
+
+  &--full &__status {
+    color: var(--color-text-error);
+    font-weight: var(--font-weight-semibold);
+  }
+}

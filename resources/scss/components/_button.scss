@@ -1,96 +1,131 @@
 @use '../abstracts' as *;
 
-// BEM, in full: .button is the block, .button__icon an element, .button--primary
-// a modifier. A modifier never appears without its block, and an element never
-// styles anything outside its block.
+// Variants only set the --button-* properties; the base rule reads them.
 
 .button {
+  --button-bg: transparent;
+  --button-bg-hover: var(--button-bg);
+  --button-fg: var(--color-text-primary);
+  --button-border: transparent;
+
+  @include button-reset;
+  @include text('button');
+  @include transition((background-color, border-color, color), var(--duration-base));
+
   display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2xs);
-  padding: var(--space-2xs) var(--space-s);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-m);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  font-size: var(--text-m);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-tight);
+  gap: var(--spacing-sm);
+  border: 1px solid var(--button-border);
+  border-radius: var(--radius-xs);
+  background-color: var(--button-bg);
+  color: var(--button-fg);
+  text-align: center;
   text-decoration: none;
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--easing-standard);
+  white-space: nowrap;
+
+  // The border sits inside the box, so take it off the padding.
+  padding-block: calc(var(--spacing-md) - 1px);
+  padding-inline: calc(var(--spacing-xl) - 1px);
 
   &:hover {
-    background-color: var(--color-surface-raised);
+    background-color: var(--button-bg-hover);
   }
 
-  &[disabled],
-  &[aria-disabled='true'] {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-
-  &__icon {
-    inline-size: 1em;
-    block-size: 1em;
+  &__icon,
+  &__arrow {
     flex: none;
   }
 
-  &--primary {
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-accent-contrast);
+  &__arrow {
+    @include transition(transform, var(--duration-base));
+  }
 
-    &:hover {
-      // No token for a hover shade: derive it rather than inventing a new colour.
-      filter: brightness(1.08);
-    }
+  &:hover &__arrow {
+    transform: translateX(var(--spacing-2xs));
+  }
+
+  &--icon-start &__icon {
+    order: -1;
+  }
+
+  &--accent {
+    --button-bg: var(--color-bg-accent);
+    --button-bg-hover: var(--color-bg-accent-hover);
+    --button-fg: var(--color-text-on-accent);
+  }
+
+  &--primary {
+    --button-bg: var(--color-bg-primary);
+    --button-bg-hover: var(--color-bg-primary-hover);
+    --button-fg: var(--color-text-inverse);
+  }
+
+  &--secondary {
+    --button-bg-hover: var(--color-bg-accent-subtle);
+    --button-border: var(--color-border-primary);
+  }
+
+  &--danger {
+    --button-bg: var(--color-bg-danger);
+    --button-bg-hover: var(--color-bg-danger-hover);
+    --button-fg: var(--color-text-inverse);
   }
 
   &--ghost {
-    background-color: transparent;
-    border-color: transparent;
-
-    &:hover {
-      background-color: var(--color-surface-raised);
-    }
+    --button-bg-hover: var(--color-bg-subtle);
   }
 
-  // Irreversible actions: deleting the account. Red is not the only signal —
-  // the label says what happens, and the modal asks again.
-  &--danger {
-    background-color: var(--color-danger);
-    border-color: var(--color-danger);
-    color: var(--color-danger-contrast);
-
-    &:hover {
-      background-color: var(--color-danger);
-      filter: brightness(1.08);
-    }
-  }
-
-  // A button that reads as a link, for an action inside running text such as
-  // "re-send the verification email". Still a <button>: it acts.
+  // An action inside running text: looks like a link.
   &--link {
+    --button-fg: var(--color-text-link);
+
+    @include text('body');
+
     display: inline;
     padding: 0;
     border: 0;
-    background: none;
-    color: var(--color-accent);
-    font-size: inherit;
-    font-weight: var(--weight-normal);
     text-decoration: underline;
     text-underline-offset: 0.15em;
+    white-space: normal;
 
     &:hover {
-      background: none;
-      color: var(--color-text);
+      color: var(--color-text-primary);
     }
   }
 
   &--block {
     display: flex;
     inline-size: 100%;
+  }
+
+  &.is-loading {
+    cursor: progress;
+  }
+
+  &.is-loading:hover {
+    background-color: var(--button-bg);
+  }
+
+  &:disabled:not(.is-loading),
+  &[aria-disabled='true']:not(.is-loading) {
+    --button-bg: var(--color-bg-disabled);
+    --button-bg-hover: var(--color-bg-disabled);
+    --button-fg: var(--color-text-disabled);
+    --button-border: transparent;
+
+    cursor: not-allowed;
+  }
+
+  &--ghost:disabled:not(.is-loading),
+  &--ghost[aria-disabled='true']:not(.is-loading) {
+    --button-bg: transparent;
+    --button-bg-hover: transparent;
+  }
+
+  &:disabled &__arrow,
+  &[aria-disabled='true'] &__arrow {
+    transform: none;
   }
 }

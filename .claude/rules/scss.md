@@ -1,63 +1,96 @@
 ---
 paths:
   - resources/scss/**
+  - resources/css/**
   - resources/js/**
-description: Conventions for the SCSS layers, design tokens, BEM and frontend JavaScript.
+description: Conventions for the design system — tokens, cascade layers, BEM, plain CSS and frontend JavaScript.
 ---
 
 # Styling
 
 Dart Sass through `sass-embedded`. No Tailwind, and no utility framework is to be
-added — the tokens below are the shared vocabulary that would otherwise be.
+added — the tokens are the shared vocabulary that would otherwise be.
+
+The design system is the **TLE2 Styleguide** in Figma (file
+`ZqeL3mWlzYdSCqkm87thcF`): its variables are the tokens, its components are the
+Blade components. When the two disagree, Figma is right and the code is the bug.
 
 ## Layers
 
-`main.scss` is the only entry point Vite compiles, and its `@use` order is the
-cascade order:
+`main.scss` is the only entry point Vite compiles. It declares the CSS cascade
+layers once, in order, and loads each directory into its own layer:
 
 ```
-abstracts  tokens and mixins — must exist before anything reads them
-base       element defaults
-layout     the page frame
-components blocks
-utilities   the few single-purpose classes
+tokens      custom properties only (tokens/)
+base        element defaults: reset, body text, headings (base/)
+layout      the page frame: container, grid, navbar, footer (layout/)
+components  one block per Figma component (components/)
+utilities   .sr-only and the .text-* classes (utilities/)
+app         plain CSS from resources/css — always wins
 ```
 
-Each directory has an `_index.scss` that `@forward`s its parts. A component reads
-`@use '../abstracts' as *;`. Sass emits the shared CSS once however often a module
-is used, so there is no cost to using it everywhere.
+A later layer beats an earlier one **regardless of specificity**. Two rules follow:
+
+- **Never restyle another block's root.** `layout/` sits below `components/`, so
+  `.navbar .button { … }` loses to `.button { … }`. Wrap the component in an
+  element of your own block (`.navbar__wide`) or give the component a prop.
+- **Never `!important`.** A utility already beats a component, and `app` already
+  beats everything.
+
+`abstracts/` emits **no CSS**: breakpoints, the `text()` mixin, `focus-ring`,
+`transition`, `button-reset`. Every module may `@use '../abstracts' as *;`.
+Include `button-reset` **before** `text()` — it resets `font`.
 
 ## Tokens
 
-Design tokens are **CSS custom properties on `:root`**, in
-`abstracts/_tokens.scss`. Not Sass variables: custom properties stay readable in
-devtools, can be overridden per component or per media query, and JavaScript can
-read them.
+CSS custom properties on `:root`, in `tokens/`. The names are the Figma
+variables' Web code syntax (`--color-text-primary`, `--spacing-md`,
+`--radius-sm`), so a value from Dev Mode is already a valid name.
 
-**Add a token before using a raw value.** A hex code, a `px` gap or a font stack
-written inline is exactly what this file exists to prevent. The dark scheme
-changes only the colour tokens, so a component that reads token names needs no
-dark rule of its own.
+- `--toc-*` are primitives. Components read only the semantic `--color-*`.
+- Text styles are five properties each (`--text-heading-1-size`, `-line-height`,
+  `-weight`, `-tracking`, `-case`). Apply one whole with `@include text('heading-1')`
+  or the `.text-heading-1` class.
+- **Add a token before using a raw value.** A hex code, a px gap or a font stack
+  written inline is what `tokens/` exists to prevent. A one-off dimension a
+  component needs goes in a block-local custom property at the top of the block,
+  named after it (`--site-footer-brand-width`).
+- There is one colour mode, Light. Figma defines no dark scheme, so there is none.
 
 The one place a Sass variable is correct is `$breakpoints`: a media query cannot
-read a custom property. Use `@include from('m')`, never a literal width.
+read a custom property. `@include from('tablet')` / `until('tablet')`; the widths
+are tablet 48rem (768), desktop 80rem (1280), wide 120rem (1920).
 
-Use `map.get` from `sass:map`, never the global `map-get` — the globals are
-deprecated and become an error in Dart Sass 3.
+Use `map.get` from `sass:map`, never the global `map-get`.
 
 ## BEM
 
-`.block`, `.block__element`, `.block--modifier`. A modifier never appears without
-its block; an element never styles anything outside its block. Block names
-describe the role, never the appearance — renaming `.site-header` because it
-turned blue is the failure this avoids.
+`.block`, `.block__element`, `.block--modifier`; a state is `.is-*` or an ARIA
+attribute. A modifier never appears without its block; an element never styles
+anything outside its block. Block names describe the role, never the appearance.
+
+Keep comments short: one line at the top of a file if the name does not say it
+all, and one line beside code that would otherwise look wrong. A Blade component
+opens with one line on what it is, a usage example and a `Props:` line.
+
+## Plain CSS
+
+`resources/css/app.css` is for teammates who do not write Sass. It is compiled
+into the same stylesheet, in the `app` layer: it can use every token and every
+class, native CSS nesting works, and its rules always win. No Sass syntax there.
+
+## Interaction
+
+Hover transitions ease out over the duration the Figma prototype uses (tokens in
+`tokens/_motion.scss`). The focus ring is keyboard-only (`:focus-visible`), never
+a state in the design; on navy use `@include focus-ring('inverse')`.
 
 ## JavaScript
 
 `resources/js/app.js` is progressive enhancement, and is meant to stay small. No
-framework. Query by `data-` attribute rather than by CSS class: a class is for
-styling and will be renamed. Leave the markup usable without JavaScript.
+framework. A component that needs script gets `resources/js/components/<name>.js`
+exporting `initialise<Name>()`, called from app.js. Query by `data-` attribute
+rather than by CSS class. Leave the markup usable without JavaScript.
 
 `VITE_PORT` is declared in both env templates and Vite runs with `strictPort`, so
-a busy port fails loudly instead of moving to 5174 and serving a page against a
-manifest written by another process.
+a busy port fails loudly instead of moving to 5174.

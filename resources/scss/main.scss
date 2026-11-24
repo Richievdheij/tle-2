@@ -1,12 +1,32 @@
-// The single entry point Vite compiles. Nothing else is passed to the bundler.
-//
-// Layer order is the cascade order, so it is deliberate: tokens and mixins first
-// (they must exist before anything reads them), then element defaults, then the
-// page frame, then components — each layer able to override the one above it
-// without a single !important.
+// The only entry point Vite compiles. A later layer beats an earlier one regardless of specificity.
 
-@use 'abstracts';
-@use 'base';
-@use 'layout';
-@use 'components';
-@use 'utilities';
+@use 'sass:meta';
+
+@layer tokens, base, layout, components, utilities, app;
+
+// Font faces are not part of the cascade, so they sit outside every layer.
+@include meta.load-css('base/fonts');
+
+@layer tokens {
+  @include meta.load-css('tokens');
+}
+
+@layer base {
+  @include meta.load-css('base');
+}
+
+@layer layout {
+  @include meta.load-css('layout');
+}
+
+@layer components {
+  @include meta.load-css('components');
+}
+
+@layer utilities {
+  @include meta.load-css('utilities');
+}
+
+@layer app {
+  @include meta.load-css('../css/app');
+}

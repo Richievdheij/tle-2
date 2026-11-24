@@ -1,0 +1,68 @@
+@use '../abstracts' as *;
+
+.avatar {
+  --avatar-size: var(--spacing-3xl);
+
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--avatar-size);
+  block-size: var(--avatar-size);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-accent);
+  color: var(--color-text-on-accent);
+
+  &__initials {
+    @include text('label');
+  }
+
+  &__photo {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  // XS has no text style of its own.
+  &--xs {
+    --avatar-size: var(--spacing-xl);
+  }
+
+  &--xs &__initials {
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-regular);
+    line-height: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  &--sm {
+    --avatar-size: var(--spacing-2xl);
+  }
+
+  &--sm &__initials {
+    @include text('caption');
+  }
+
+  &--lg {
+    --avatar-size: var(--spacing-5xl);
+  }
+
+  &--lg &__initials {
+    @include text('heading-4');
+  }
+
+  &--primary {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-inverse);
+  }
+
+  &--neutral {
+    background-color: var(--color-bg-disabled);
+    color: var(--color-text-on-accent);
+  }
+
+  &--subtle {
+    background-color: var(--color-bg-accent-subtle);
+    color: var(--color-text-on-accent);
+  }
+}
