@@ -25,10 +25,6 @@ package-lock.json
 # syntax-checks every Blade file during `make build`.
 **/*.php
 
-# An imported specification, kept verbatim as the record of why this toolchain
-# looks the way it does. Reflowing its tables would bury that history in a diff.
-TOOLCHAIN-BOOTSTRAP.md
-
 # boost.json is written by `php artisan boost:install`, which formats it with four
 # spaces. Prettier wants two, so leaving it here would make every boost run dirty
 # the tree and fail format-check.

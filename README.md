@@ -260,6 +260,4 @@ If you want to use this, ask.
   renders. `make erd` redraws it after a migration; write your notes around it.
 - [docs/toolchain.md](docs/toolchain.md) — the gates, the decisions behind them,
   and the things this template deliberately does not set up.
-- [TOOLCHAIN-BOOTSTRAP.md](TOOLCHAIN-BOOTSTRAP.md) — the specification this
-  toolchain was built from, kept verbatim as the record.
 - [AGENTS.md](AGENTS.md) — the map for coding agents.
