@@ -1,24 +1,6 @@
 {{--
-    The page shell, as a component layout: a page writes <x-layouts.app> and its
-    body arrives in {{ $slot }}. This is the current Laravel convention and it
-    beats @extends/@section here because attributes like :title are ordinary
-    component props with real defaults.
-
-    Everything the browser needs is declared once, in partials/head. A page that
-    needs another stylesheet has outgrown the template, not this layout.
-
-    Props — Blade has no typed props, so this block IS the contract. `@props`
-    carries names and defaults only; the compiler never checks a type.
-
-      string|null $title   prepended to the app name in <title>; omit for the
-                           app name alone
-
-    Slots
-
-      $header  optional page heading, rendered in a band above the content:
-               <x-slot:header><h1>{{ __('Profile') }}</h1></x-slot:header>
-
-    Styles: resources/scss/layout/_site.scss (frame) and _container.scss (width)
+    Page shell: <x-layouts.app :title="__('Profile')">…</x-layouts.app>.
+    Props: title (prepended to the app name in <title>). Optional $header slot renders a band above the content.
 --}}
 @props(['title' => null])
 
@@ -29,20 +11,17 @@
     </head>
 
     <body>
-        {{-- First focusable element on the page. Without it a keyboard user tabs
-             through the whole navigation before reaching the content, on every
-             page. --}}
+        {{-- First focusable element, so keyboard users can skip the navigation. --}}
         <a class="skip-link" href="#main">{{ __('Skip to content') }}</a>
 
         <div class="site">
-            {{-- The header and the content together fill exactly one screen,
-                 however little the page holds; the footer starts below it. --}}
+            {{-- Header and content fill at least one screen; the footer starts below it. --}}
             <div class="site__screen">
                 @include('partials.header')
 
                 <main class="site__main" id="main" tabindex="-1">
                     @isset($header)
-                        <div class="page-header">
+                        <div class="site__intro">
                             <div class="container">
                                 {{ $header }}
                             </div>

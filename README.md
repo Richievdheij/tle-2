@@ -226,14 +226,40 @@ rendered and clickable, under **Mail** in Herd.
 
 ## What is in the box
 
-No demo. `/` renders `resources/views/home.blade.php`, which exists so a fresh
-clone serves something and the layout, SCSS and Vite manifest are exercised by a
-real request. Replace it.
+No demo. `/` renders `resources/views/home.blade.php`: the navbar, an empty
+content area and the footer. It exists so the layout, the design system and the
+Vite manifest are exercised by a real request. The content is yours.
+
+Every component in `resources/views/components/` opens with a usage example,
+so you can copy it straight into a page.
 
 The conventions are carried by the structure rather than by example code:
 `app/Http/Requests`, `app/Http/Resources` and `app/Policies` are present and
 empty, the Blade components and SCSS layers are ready to use, and `make arch`
 enforces the naming rules on the first class you add to any of them.
+
+## Building a page
+
+1. Add a route in `routes/web.php`, for example
+   `Route::view('/about', 'about')->name('about');`.
+2. Create the view `about.blade.php` in `resources/views/` and wrap it in the
+   page shell:
+
+   ```blade
+   <x-layouts.app :title="__('About us')">
+       <h1>{{ __('About us') }}</h1>
+       <x-button href="{{ route('home') }}">{{ __('Back home') }}</x-button>
+   </x-layouts.app>
+   ```
+
+3. Pick components from `resources/views/components/`. The top of each file
+   shows how to use it and which props it takes.
+4. Need extra styling? Put it in `resources/css/app.css` (plain CSS), or add a
+   `resources/scss/components/_<name>.scss` and `@forward` it in that folder's
+   `_index.scss`. Use the tokens (`var(--spacing-md)`, `var(--color-text-primary)`)
+   instead of raw values.
+
+Write every visible text in English inside `__('…')`.
 
 ## Styling
 

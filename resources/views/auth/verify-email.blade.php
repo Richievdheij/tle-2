@@ -4,7 +4,7 @@
     </p>
 
     @if (session('status') === 'verification-link-sent')
-        <x-alert variant="success" role="status" :dismissible="false">
+        <x-alert tone="success" role="status" :dismissible="false">
             {{ __('A new verification link has been sent to the email address you provided during registration.') }}
         </x-alert>
     @endif
