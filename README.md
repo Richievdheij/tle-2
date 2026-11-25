@@ -298,6 +298,8 @@ If you want to use this, ask.
 
 ## Documentation
 
+- [Wiki](https://github.com/Richievdheij/tle-2/wiki) — how the work is planned and
+  tracked: the project board, statuses, writing issues and pull requests.
 - [docs/branching.md](docs/branching.md) — `main`, `develop` and feature branches:
   what goes where, and why nobody commits to `main`.
 - [docs/erd.md](docs/erd.md) — the data model as a Mermaid diagram that GitHub

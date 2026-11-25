@@ -1,0 +1,23 @@
+name: 📝 Docs
+description: Documentation, report, guide or README.
+labels: ["type: docs"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What is being documented
+      placeholder: Setup guide for new developers.
+    validations:
+      required: true
+  - type: textarea
+    id: audience
+    attributes:
+      label: Audience
+      description: Who reads this, and what should they be able to do afterwards?
+  - type: textarea
+    id: contents
+    attributes:
+      label: Contents
+      value: |
+        - [ ] …
+        - [ ] …
