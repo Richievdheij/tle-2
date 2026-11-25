@@ -19,7 +19,7 @@ import { readEnvFile, unquote } from './lib/dotenv.mjs'
 import { isFree, pidsOn, projectPorts } from './lib/ports.mjs'
 import { site } from './lib/site.mjs'
 
-const HINT = "README.md, 'Opening the site' — and 'make status' shows what holds a port"
+const HINT = "README.md, 'De site openen' — and 'make status' shows what holds a port"
 const c = {
   bold: (s) => `\x1b[1m${s}\x1b[0m`,
   dim: (s) => `\x1b[2m${s}\x1b[0m`,
