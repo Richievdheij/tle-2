@@ -5,7 +5,7 @@ wil krijgen. Op dit moment kun je het goede doel alleen steunen door fysiek mee
 te helpen. Met deze website kan dat ook online: door te doneren, of door zelf
 een cleanup-event te starten of aan te sluiten bij een bestaand event.
 
-Het is een schoolproject (TLE2) in opdracht van **IO**, en het hoort bij het werk dat IO voor Ocean Clean-Up doet.
+Het is een schoolproject (TLE2) in opdracht van **IO**.
 De site draait op dummy data en gebruikt geen echt geld en geen echte betaalgegevens.
 
 ## Snel starten
