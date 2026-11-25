@@ -22,7 +22,7 @@ import { execFileSync } from 'node:child_process'
 import { pass, warn } from './lib/check.mjs'
 import { herdSiteName, site } from './lib/site.mjs'
 
-const HINT = "README.md, 'Opening the site'"
+const HINT = "README.md, 'De site openen'"
 
 /** On Windows `herd` is a .bat shim, which only a shell can run. */
 const shell = process.platform === 'win32'

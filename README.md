@@ -1,253 +1,186 @@
-# laravel-starter-template
+# TLE2
 
-A Laravel 13 starter template with one front door, one gate list, and a checked
-environment contract. Built so that after the first afternoon nobody has to think
-about the toolchain again.
+Een website voor een (fictief) non-profit dat zee, stranden en oceanen schoon
+wil krijgen. Op dit moment kun je het goede doel alleen steunen door fysiek mee
+te helpen. Met deze website kan dat ook online: door te doneren, of door zelf
+een cleanup-event te starten of aan te sluiten bij een bestaand event.
+
+Het is een schoolproject (TLE2) in opdracht van **IO**, en het hoort bij het werk dat IO voor Ocean Clean-Up doet.
+De site draait op dummy data en gebruikt geen echt geld en geen echte betaalgegevens.
 
 ## Snel starten
 
-1. Clone de repository in je Herd-map (`~/Herd` of `C:\Users\<jij>\Herd`).
+1. Clone de repository in je Herd-map (`~/Herd` of `C:\Users\<jij>\Herd`):
+
+   ```bash
+   git clone https://github.com/Richievdheij/tle-2.git
+   cd tle-2
+   ```
+
 2. Draai in die map één keer:
 
    ```bash
    composer run setup
    ```
 
-3. Open de URL die erbij staat (`https://<map>.test`), of klik op de site in de
-   Herd-app.
+3. Open de URL die aan het eind getoond wordt (meestal `https://tle-2.test`), of
+   klik op de site in de Herd-app.
 
 Klaar. Inloggen kan met `test@example.com` / `password`.
-Geen Herd? Draai `php artisan serve` en open `http://localhost:8000`.
+Geen Herd? Draai `composer run dev` en open `http://localhost:8000`.
 
-De database is MySQL (`tle_2`); `composer run setup` maakt hem aan. Bekijk hem
-in phpMyAdmin op <http://phpmyadmin.test> (gebruiker `root`, geen wachtwoord).
-Draait MySQL bij jou met een wachtwoord, zet het dan in `DB_PASSWORD` in `.env`.
+`composer run setup` installeert de PHP- en frontend-dependencies, maakt `.env`
+met een application key, laat Herd de map serveren, maakt de MySQL-database
+`tle_2` aan, migreert en seedt hem, bouwt de CSS en JavaScript en zet de git
+hooks aan. Je kunt het veilig opnieuw draaien.
 
 Alleen de site toevoegen in de Herd-app is niet genoeg: zonder
 `composer run setup` zijn er geen `.env`, database en CSS, en krijg je een
 foutpagina.
 
-| Wil je…                    | Draai                                |
-| -------------------------- | ------------------------------------ |
-| Live reload tijdens stylen | `composer run dev`                   |
-| De tests draaien           | `composer test`                      |
-| Na een `git pull`          | niets, de git hooks werken alles bij |
-| Er ziet iets raar uit      | `composer run refresh`               |
+## Benodigdheden
 
-## Getting started in detail
+De database bekijk je in phpMyAdmin op <http://phpmyadmin.test> (user `root`,
+geen wachtwoord). Heeft jouw MySQL wel een wachtwoord, zet het dan in
+`DB_PASSWORD` in `.env`.
 
-Everything works with the plain Laravel commands (`composer`, `php artisan`,
-`npm`), on macOS, Linux and Windows. The `make` targets run exactly the same
-thing and are optional.
+**Windows.** De `composer`- en `php artisan`-commando's werken gewoon, met Herd
+voor Windows of een andere PHP 8.4. Alleen `make` heeft WSL2 nodig
+(`wsl --install`, en clone daarbinnen). Zonder make meldt de pre-push hook dat
+`make verify` niet gedraaid is en laat hij de push door; CI draait dezelfde
+checks toch.
 
-### First time
+## Dagelijkse commando's
 
-```bash
-git clone <this repository>
-cd <folder>
-composer run setup        # or: make install
-```
+Alles werkt met de gewone Laravel-commando's (`composer`, `php artisan`, `npm`).
+De `make`-targets doen precies hetzelfde en zijn optioneel.
 
-That one command installs the PHP and frontend dependencies, creates `.env` with
-an application key, lets Herd serve the folder, creates, migrates and seeds the
-MySQL database, builds the CSS and JavaScript, and arms the git hooks. It ends by
-printing the URL to open. Running it again is safe.
+| Wat                                 | Laravel                                         | make                          |
+| ----------------------------------- | ----------------------------------------------- | ----------------------------- |
+| De site openen (Herd)               | niets te draaien, open `https://tle-2.test`     | `make status` toont de URL    |
+| Live reload tijdens SCSS/JS/Blade   | `composer run dev`                              | `make dev`                    |
+| De tests draaien                    | `composer test`                                 | `make test`                   |
+| Eén test draaien                    | `php artisan test --filter=<naam>`              | `make test-one filter=<naam>` |
+| Na een `git pull` of andere branch  | automatisch; met de hand `composer run refresh` | `make update`                 |
+| Nieuwe migrations draaien           | `php artisan migrate`                           | `make migrate`                |
+| De database opnieuw opbouwen        | `php artisan migrate:fresh --seed`              | `make fresh yes=1`            |
+| CSS en JavaScript bouwen            | `npm run build`                                 | `make build`                  |
+| Opmaak herstellen                   | `vendor/bin/pint` en `npx prettier --write .`   | `make format`                 |
+| Alle checks van CI, vóór het pushen |                                                 | `make verify`                 |
+| Draaiende processen stoppen         |                                                 | `make stop`                   |
 
-### Opening the site
+**Voor de styling heb je `npm run dev` nooit nodig.** Herd serveert de gebouwde
+assets. `composer run dev` is alleen voor live reload: het draait Vite, de queue
+listener en de log tail samen (plus `php artisan serve` als Herd de map niet
+serveert). Stop het met Ctrl-C; de pagina's vallen dan terug op de gebouwde
+assets. Draai per project maar één `composer run dev`.
 
-**With Laravel Herd** (macOS or Windows), clone the repository anywhere under
-Herd's folder (`~/Herd` or `C:\Users\<you>\Herd`, at any depth). `composer run setup`
-links it, so the site is at `https://<folder>.test` straight away and stays up.
-There is nothing to start and nothing to keep running. The styling is there
-too, because Herd serves the built assets.
+**Na een pull hoef je niets te onthouden.** De git hooks `post-merge`,
+`post-checkout` en `post-rewrite` draaien `composer run refresh`: nieuwe
+dependencies, nieuwe migrations en opnieuw gebouwde assets, in ongeveer een
+seconde als er niets veranderd is.
 
-**Without Herd**, run `composer run dev` (or `make dev`) and open
+## Als er iets mis lijkt
+
+| Wat je ziet                                   | Oplossing                                                                             |
+| --------------------------------------------- | ------------------------------------------------------------------------------------- |
+| De pagina heeft geen styling                  | `composer run refresh`: bouwt opnieuw en ruimt het hot file van een gecrashte Vite op |
+| `https://tle-2.test` zegt "Site not found"    | `composer run setup`, of `herd link --secure` in de map                               |
+| Een fout over een ontbrekende table of column | `php artisan migrate`                                                                 |
+| Mails of links wijzen naar de verkeerde URL   | `composer run setup` zet `APP_URL` op de Herd-URL                                     |
+
+## De site openen
+
+**Met Laravel Herd** (macOS of Windows) clone je de repository ergens onder de
+Herd-map, op elke diepte. Herd serveert een map als die gelinkt is, of als hij
+_direct_ in een geparkeerde map staat: `~/Herd/tle-2` werkt meteen,
+`~/Herd/development/tle-2` pas na een link. `composer run setup` (of
+`make herd`) linkt de map met `herd link --secure`, dus de site staat er meteen
+en blijft draaien.
+
+Gebruikt een andere map de sitenaam al, dan linkt setup niet over die naam heen.
+Het zegt welke map het is, en je kiest zelf een andere naam met
+`herd link --secure <andere-naam>`.
+
+**Zonder Herd** draai je `composer run dev` (of `make dev`) en open je
 `http://localhost:8000`.
 
-`make status` shows the URL and what is running at any time.
+## Inloggen en accounts
 
-### Everyday commands
-
-| What                                    | Laravel                                        | make                          |
-| --------------------------------------- | ---------------------------------------------- | ----------------------------- |
-| Open the site (Herd)                    | nothing to run, open `https://<folder>.test`   |                               |
-| Live reload while editing SCSS/JS/Blade | `composer run dev`                             | `make dev`                    |
-| Run the tests                           | `composer test`                                | `make test`                   |
-| Run one test                            | `php artisan test --filter=<name>`             | `make test-one filter=<name>` |
-| After a `git pull` or a branch switch   | automatic; by hand `composer run refresh`      | `make update`                 |
-| Run new migrations                      | `php artisan migrate`                          | `make migrate`                |
-| Start the database over                 | `php artisan migrate:fresh --seed`             | `make fresh yes=1`            |
-| Build the CSS and JavaScript            | `npm run build`                                | `make build`                  |
-| Fix formatting                          | `vendor/bin/pint` and `npx prettier --write .` | `make format`                 |
-| Every check CI runs, before pushing     |                                                | `make verify`                 |
-
-**You never need `npm run dev` to see the styling.** It is only for live reload
-while you edit: `composer run dev` runs Vite, the queue listener and the log tail
-together (plus `php artisan serve` when Herd does not serve the folder). Stop it
-with Ctrl-C and the pages fall back to the built assets.
-
-**After a pull nothing needs remembering.** The `post-merge`, `post-checkout` and
-`post-rewrite` git hooks run `composer run refresh` for you: they install changed
-dependencies, run new migrations and rebuild the assets, in about a second when
-nothing changed.
-
-### When something looks wrong
-
-| Symptom                                       | Fix                                                                                     |
-| --------------------------------------------- | --------------------------------------------------------------------------------------- |
-| The page has no styling                       | `composer run refresh`: rebuilds, and removes the hot file a crashed Vite leaves behind |
-| `https://<folder>.test` says "Site not found" | `composer run setup`, or `herd link --secure` in the folder                             |
-| An error about a missing table or column      | `php artisan migrate`                                                                   |
-| Mails or links point at the wrong URL         | `composer run setup` sets `APP_URL` to the Herd URL                                     |
-
-### Herd in more detail
-
-Herd serves a folder when it is linked, or when it sits _directly_ inside a parked
-directory. `~/Herd/my-app` is served; `~/Herd/development/my-app` is not until it
-is linked, and setup (or `make herd`) does that with `herd link --secure`.
-Setup does not link over a site name another folder already uses. In that case it
-says which folder, and you pick a different name with
-`herd link --secure <other-name>`.
-
-Run one `composer run dev` per project. A second would fail on Vite's port and, on
-its way out, switch off live reload for the first, so it refuses and says
-which process holds the port. `make stop` ends a session's Vite, queue listener,
-log tail and `artisan serve` for this folder only.
-
-## Where you work
-
-**Nobody commits to `main`.** `main` is always deployable; `develop` is where work
-is integrated; a feature branch is cut from `develop` and merged back into it.
-
-```bash
-git switch develop && git pull
-git switch -c feature/what-you-are-doing
-# ... work ...
-make verify          # about seven seconds; the pre-push hook runs it too
-git push -u origin feature/what-you-are-doing
-```
-
-The full model, including hotfixes and how two people share one branch, is in
-[docs/branching.md](docs/branching.md).
-
-## Requirements
-
-| Tool     | Version | Notes                                                      |
-| -------- | ------- | ---------------------------------------------------------- |
-| PHP      | 8.4+    | Laravel Herd, or any PHP with the extensions Laravel needs |
-| Composer | 2.x     |                                                            |
-| Node     | 24      | The version is in [.nvmrc](.nvmrc)                         |
-| npm      | 11+     |                                                            |
-| MySQL    | 8.4+    | On `127.0.0.1:3306`, user `root` without a password        |
-| make     | 3.81+   | Optional. macOS ships it; on Windows see below             |
-
-**Windows.** The Laravel commands above work natively, with Herd for Windows or
-any PHP 8.4. Only `make` needs WSL2 (`wsl --install`, then clone inside it).
-Without make, the pre-push hook says that `make verify` did not run and lets the
-push through. CI runs the same checks either way.
-
-Git Bash with `choco install make` does not work, and it fails in a way worth
-knowing about: the native Windows make spawns `cmd.exe` for every recipe line and
-silently ignores a POSIX shell it cannot resolve, so `vendor/bin/pint` comes back
-as `'vendor' is not recognized as an internal or external command`. That reads
-like a missing dependency but is really the wrong interpreter. This was measured
-on a `windows-latest` runner, not assumed.
-
-## The seeded account
-
-Setup seeds one known local account, and `php artisan migrate:fresh --seed` (or
-`make fresh yes=1`) recreates it:
+Setup seedt één lokaal account; `php artisan migrate:fresh --seed` (of
+`make fresh yes=1`) maakt het opnieuw aan:
 
 ```
 email:    test@example.com
 password: password
 ```
 
-Log in with them at `/login`; the account's email address is already verified.
+| Waar                                      | Wat                                     |
+| ----------------------------------------- | --------------------------------------- |
+| `routes/auth.php`                         | Alle auth-routes                        |
+| `app/Http/Controllers/Auth/`              | Eén controller per flow                 |
+| `app/Http/Requests/Auth/LoginRequest.php` | Inloggen, maximaal vijf pogingen        |
+| `resources/views/auth/`, `profile/`       | De pagina's, op de guest- en app-layout |
 
-These credentials are written down on purpose. A shared, obviously-local account
-is safer than five people each inventing one, and one of those reaching
-production. It exists only in seed data and only in your local database.
+### E-mailverificatie aanzetten
 
-## Authentication
-
-Registration, login, logout, password reset, email verification, password
-confirmation and a profile page (update details, change password, delete the
-account) work straight after `composer run setup`. Functionally it is what
-`php artisan breeze:install blade` gives you — the same route names, URIs,
-middleware and behaviour — written in this template's own Blade components,
-SCSS and vanilla JavaScript, with no Breeze, Tailwind or Alpine and no extra
-dependency.
-
-| Where                                     | What                                         |
-| ----------------------------------------- | -------------------------------------------- |
-| `routes/auth.php`                         | Every auth route, named as Breeze names them |
-| `app/Http/Controllers/Auth/`              | One controller per flow                      |
-| `app/Http/Requests/Auth/LoginRequest.php` | Login, rate-limited to five attempts         |
-| `resources/views/auth/`, `profile/`       | The pages, on the guest and app layouts      |
-
-### Turning on email verification
-
-Off by default, as in Breeze. In `app/Models/User.php`, remove the `//` before
-`implements` on the class line:
+Staat standaard uit. Haal in `app/Models/User.php` de `//` weg vóór
+`implements` op de class-regel:
 
 ```php
 class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVerifyEmail
 ```
 
-`make format` then turns the class name into an import. From that moment a new
-account is mailed a verification link, `/dashboard` (middleware `verified`)
-stays closed until it is followed, and the profile page offers to re-send it.
+`make format` maakt van de class-naam daarna een import. Vanaf dan krijgt een
+nieuw account een verificatielink, blijft `/dashboard` dicht tot die gevolgd is,
+en kan de link opnieuw verstuurd worden vanaf de profielpagina.
 
-### Where the mails go locally
+### Waar de mails lokaal heen gaan
 
-`.env.example` sets `MAIL_MAILER=log`, so nothing is sent: the password reset
-and verification mails are written to `laravel.log` in `storage/logs/`. Find the link
-with:
+`.env.example` zet `MAIL_MAILER=log`: er wordt niets verstuurd, de mails komen in
+`laravel.log` in `storage/logs/`. Vind de link met:
 
 ```bash
 grep -o 'https\?://[^ )"<]*reset-password[^ )"<]*' storage/logs/laravel.log | tail -1
 grep -o 'https\?://[^ )"<]*verify-email[^ )"<]*' storage/logs/laravel.log | tail -1
 ```
 
-With Herd Pro, set `MAIL_MAILER=smtp` instead — `MAIL_HOST=127.0.0.1` and
-`MAIL_PORT=2525` already point at Herd's mail service — and the mails appear,
-rendered and clickable, under **Mail** in Herd.
+## Samenwerken
 
-## Layout
+**Niemand commit op `main`.** `main` is altijd deploybaar, op `develop` komt het
+werk samen, en een feature branch maak je vanaf `develop` en merge je daar weer
+in.
 
-| Path                | What lives there                                               |
-| ------------------- | -------------------------------------------------------------- |
-| `app/`              | Models, controllers, form requests, policies, resources        |
-| `resources/views/`  | Blade: a component layout, partials and anonymous components   |
-| `resources/scss/`   | The design system: tokens, base, layout, components, utilities |
-| `resources/css/`    | Plain CSS, for whoever would rather not write SCSS             |
-| `database/`         | Migrations, factories with states, seeders                     |
-| `tests/`            | Pest — Unit, Feature and Arch suites                           |
-| `scripts/`          | The check harness and the runtime helpers                      |
-| `docs/toolchain.md` | Why the toolchain is shaped this way, and what it does not do  |
-| `docs/erd.md`       | The data model as a Mermaid diagram, generated by `make erd`   |
+```bash
+git switch develop && git pull
+git switch -c feature/waar-je-aan-werkt
+# ... werk ...
+make verify          # ongeveer zeven seconden; de pre-push hook draait het ook
+git push -u origin feature/waar-je-aan-werkt
+```
 
-## What is in the box
+Het volledige model, met hotfixes en hoe twee mensen één branch delen, staat in
+[docs/branching.md](docs/branching.md). Hoe we het werk plannen (projectbord,
+issues, pull requests) staat in de [wiki](https://github.com/Richievdheij/tle-2/wiki).
 
-No demo. `/` renders `resources/views/home.blade.php`: the navbar, an empty
-content area and the footer. It exists so the layout, the design system and the
-Vite manifest are exercised by a real request. The content is yours.
+## Projectstructuur
 
-Every component in `resources/views/components/` opens with a usage example,
-so you can copy it straight into a page.
+| Pad                | Wat er staat                                                   |
+| ------------------ | -------------------------------------------------------------- |
+| `app/`             | Models, controllers, form requests, policies, resources        |
+| `resources/views/` | Blade: layouts, partials en anonieme components                |
+| `resources/scss/`  | Het design system: tokens, base, layout, components, utilities |
+| `resources/css/`   | Gewone CSS, voor wie liever geen SCSS schrijft                 |
+| `database/`        | Migrations, factories en seeders                               |
+| `tests/`           | Pest: Unit-, Feature- en Arch-tests                            |
+| `scripts/`         | De checks en de hulpscripts                                    |
+| `docs/`            | Branchmodel, datamodel (ERD) en de keuzes achter de toolchain  |
 
-The conventions are carried by the structure rather than by example code:
-`app/Http/Requests`, `app/Http/Resources` and `app/Policies` are present and
-empty, the Blade components and SCSS layers are ready to use, and `make arch`
-enforces the naming rules on the first class you add to any of them.
+## Een pagina bouwen
 
-## Building a page
-
-1. Add a route in `routes/web.php`, for example
+1. Voeg een route toe in `routes/web.php`, bijvoorbeeld
    `Route::view('/about', 'about')->name('about');`.
-2. Create the view `about.blade.php` in `resources/views/` and wrap it in the
-   page shell:
+2. Maak de view `about.blade.php` in `resources/views/` en zet hem in de layout:
 
    ```blade
    <x-layouts.app :title="__('About us')">
@@ -256,54 +189,37 @@ enforces the naming rules on the first class you add to any of them.
    </x-layouts.app>
    ```
 
-3. Pick components from `resources/views/components/`. The top of each file
-   shows how to use it and which props it takes.
-4. Need extra styling? Put it in `resources/css/app.css` (plain CSS), or add a
-   `resources/scss/components/_<name>.scss` and `@forward` it in that folder's
-   `_index.scss`. Use the tokens (`var(--spacing-md)`, `var(--color-text-primary)`)
-   instead of raw values.
-
-Write every visible text in English inside `__('…')`.
+3. Kies components uit `resources/views/components/`. Bovenaan elk bestand
+   staat hoe je hem gebruikt en welke props hij heeft.
+4. Extra styling? Zet het in `resources/css/app.css` (gewone CSS), of maak
+   `resources/scss/components/_<naam>.scss` en `@forward` hem in de
+   `_index.scss` van die map. Gebruik de tokens (`var(--spacing-md)`,
+   `var(--color-text-primary)`) in plaats van losse waarden.
 
 ## Styling
 
-The design system is the **TLE2 Styleguide** in Figma, implemented one to one:
-the Figma variables are CSS custom properties with the same names
-(`--color-text-primary`, `--spacing-md`, `--radius-sm`), the text styles are the
-`text()` mixin and the `.text-*` classes, and every Figma component is a Blade
-component (`<x-button variant="accent">`) whose props are the Figma properties.
+**SCSS of CSS, allebei goed.** In de browser komt gewone CSS aan. Schrijf SCSS
+in `resources/scss/`, of gewone CSS in `resources/css/app.css`: dezelfde tokens
+en classes, native CSS nesting, en de `app`-laag die altijd boven het design
+system wint. Voeg eerst een token toe voordat je een losse waarde gebruikt; een
+hexcode in een component is precies wat de tokens moeten voorkomen.
 
-No Tailwind. SCSS, BEM class names, and every layer of the system in its own CSS
-cascade layer — `tokens, base, layout, components, utilities, app` — so a later
-layer always wins without a fight over specificity.
+## Documentatie
 
-**SCSS or CSS, both work.** What reaches the browser is plain CSS. Write SCSS in
-`resources/scss/`, or plain CSS in `resources/css/app.css`: the same tokens and
-classes, native CSS nesting, and the `app` layer, which always beats the design
-system. Add a token before using a raw value: a hex code in a component is the
-thing the token files exist to prevent. The full conventions are in
-[.claude/rules/scss.md](.claude/rules/scss.md).
+- [Wiki](https://github.com/Richievdheij/tle-2/wiki): hoe we het werk plannen en
+  bijhouden: het projectbord, statussen, issues en pull requests.
+- [docs/branching.md](docs/branching.md): `main`, `develop` en feature branches.
+- [docs/erd.md](docs/erd.md): het datamodel als Mermaid-diagram. `make erd`
+  tekent het opnieuw na een migration.
+- [docs/toolchain.md](docs/toolchain.md): de checks en de keuzes erachter
+  (Engels).
+- [AGENTS.md](AGENTS.md): de handleiding voor coding agents.
 
-## Licence
+## Licentie
 
-**All rights reserved.** This is private work, not open source. There is no
-permission to copy, use, modify or redistribute it, and the repository being
-technically reachable does not grant one. See [LICENSE](LICENSE).
+**Alle rechten voorbehouden.** Dit is privéwerk, geen open source. Je mag het
+niet kopiëren, gebruiken, aanpassen of verspreiden, ook niet als de repository
+technisch bereikbaar is. Zie [LICENSE](LICENSE).
 
-The Laravel skeleton this is built on stays MIT (© Taylor Otwell) — that part
-cannot be relicensed and is not claimed. The LICENSE file says which files those
-are.
-
-If you want to use this, ask.
-
-## Documentation
-
-- [Wiki](https://github.com/Richievdheij/tle-2/wiki) — how the work is planned and
-  tracked: the project board, statuses, writing issues and pull requests.
-- [docs/branching.md](docs/branching.md) — `main`, `develop` and feature branches:
-  what goes where, and why nobody commits to `main`.
-- [docs/erd.md](docs/erd.md) — the data model as a Mermaid diagram that GitHub
-  renders. `make erd` redraws it after a migration; write your notes around it.
-- [docs/toolchain.md](docs/toolchain.md) — the gates, the decisions behind them,
-  and the things this template deliberately does not set up.
-- [AGENTS.md](AGENTS.md) — the map for coding agents.
+Het Laravel-skelet waarop dit gebouwd is, blijft MIT (© Taylor Otwell); welke
+bestanden dat zijn, staat in de LICENSE.
