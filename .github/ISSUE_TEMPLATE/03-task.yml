@@ -1,0 +1,30 @@
+name: 🔧 Task
+description: Concrete, well-scoped piece of work.
+labels: ["type: task"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What needs to happen
+      description: One sentence, starting with a verb.
+      placeholder: Set up the staging environment on the VPS.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: Becomes a progress bar on the issue.
+      value: |
+        - [ ] …
+        - [ ] …
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: How do you verify it is finished?
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Links, commands, background.

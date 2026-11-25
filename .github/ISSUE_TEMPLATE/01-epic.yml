@@ -1,0 +1,42 @@
+name: 🧱 Epic
+description: A large goal spanning several weeks, broken down into sub-issues.
+labels: ["type: epic"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!TIP]
+        > An epic describes **what** and **when it is done**, not how. The actual work lives in _sub-issues_: open the issue after creating it and choose **Create sub-issue**.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What does this deliver, in one or two sentences?
+      placeholder: Users can sign up, sign in and reset their password.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: Which problem does it solve, and for whom?
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: When has the whole epic succeeded? Make it measurable where possible.
+      value: |
+        - [ ] …
+        - [ ] …
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: What is deliberately not part of this? Keeps the epic from growing.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Links, risks, dependencies.

@@ -1,0 +1,57 @@
+name: 🐞 Bug
+description: Something does not work as intended.
+labels: ["type: bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!CAUTION]
+        > Found a **security issue**? Do not report it here. Contact the maintainer privately instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What goes wrong
+      description: Short and factual.
+      placeholder: After signing in I land on the sign-in page instead of the dashboard.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Precise enough that someone else can repeat it.
+      value: |
+        1. Go to …
+        2. Click …
+        3. See …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Where did it happen?
+      value: |
+        | | |
+        |:--|:--|
+        | **Environment** | local (Herd), local (artisan serve) or CI |
+        | **Branch and commit** | |
+        | **Browser or device** | |
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error message or logs
+      description: Paste the output. It is formatted as code automatically.
+      render: text
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Screenshots, since when, workaround.
