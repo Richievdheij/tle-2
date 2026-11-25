@@ -33,7 +33,7 @@ git push -u origin feature/example-list
 
 When it is reviewed, tested and CI is green, merge it into `develop`. On the
 project board that is the moment the issue is on _Approved_; the
-[wiki](https://github.com/Richievdheij/tle-2/wiki/Workflow) has the full flow.
+[wiki](https://github.com/Richievdheij/tle-2/wiki/Werkwijze) has the full flow.
 When `develop` is worth releasing, merge `develop` into `main`.
 
 ## Why not just commit to main
