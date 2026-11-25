@@ -1,0 +1,32 @@
+name: ✨ Feature
+description: New functionality for the user, written as a user story.
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: story
+    attributes:
+      label: User story
+      description: Who wants what, and why?
+      value: "**As a** … **I want** …, **so that** …."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Each criterion can be tested on its own, also by someone who does not read code.
+      value: |
+        - [ ] **Given** … **when** … **then** …
+        - [ ] **Given** … **when** … **then** …
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Design and links
+      description: The frame in the TLE2 Styleguide or page designs in Figma, sketches, examples. You can drag images in here.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Edge cases, technical hints, open questions.

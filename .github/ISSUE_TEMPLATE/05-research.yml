@@ -1,0 +1,34 @@
+name: 🔍 Research
+description: Investigate or decide something, within a fixed timebox.
+labels: ["type: research"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!IMPORTANT]
+        > Research always has a **timebox**. When the time is up, write down what you know and make a decision.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: One question, answerable with a choice or a recommendation.
+      placeholder: Which payment provider fits our volume best?
+    validations:
+      required: true
+  - type: input
+    id: timebox
+    attributes:
+      label: Timebox
+      placeholder: 4 hours
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Approach
+      description: Sources, method, who to talk to.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: Fill in when done. The recommendation or decision, with the reasoning.
